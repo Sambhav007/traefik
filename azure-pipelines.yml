@@ -62,7 +62,7 @@ stages:
             echo "Var1:" $Var1
             echo "Var2:" $Var2
             echo "Var3:"  $Var3
-            done < "$srcFilename"
+            done < '/home/vsts/work/1/s/file'
            
             comname:'caddy'
             
