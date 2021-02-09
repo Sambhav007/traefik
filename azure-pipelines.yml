@@ -48,9 +48,14 @@ stages:
            
            
             comname:'caddy'
+            IFS=',{}:".//'
             #cat '/home/vsts/work/1/s/file'
                       extfile=`cat '/home/vsts/work/1/s/file'`
                       echo "$extfile"
+            read -a strarr <<<"$extfile"
+            keyName=${strarr[1]}
+            echo "$keyName"
+                      
             echo 'Hello world'           
             cat 'customermanagementapi-v1.yaml'
             echo 'Hello world 0'  
