@@ -15,7 +15,7 @@ stages:
   displayName: Publish of release pipeline
   jobs:
   - job: PreReleasePrepForhospitalMicroservice
-    dependsOn: Build
+    
     displayName: Pre Release Preparation (Bash build id and Publish for Release pipeline)
     steps:
     - task: Bash@3
