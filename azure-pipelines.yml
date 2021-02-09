@@ -48,8 +48,8 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2"
-            varname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
-            echo $(varname)
+            comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
+            echo $(comname)
             echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
@@ -155,7 +155,7 @@ stages:
         
         action: 'createSecret'
         kubernetesServiceConnection: 'Traefikcluster'
-        namespace: $(varname)
+        namespace: $(comname)
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=settings/appsettings_customersecret.json'
