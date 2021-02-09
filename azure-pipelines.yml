@@ -152,7 +152,17 @@ stages:
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
     
-    
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Traefikcluster'
+        namespace:  $Var2
+        command: 'create'
+        secretType: 'generic'
+        secretName: 'settingscustomerapi-appsettings'
+        secretArguments: '--from-file=settings/appsettings_customersecret.json'
+        
+      
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: ''
