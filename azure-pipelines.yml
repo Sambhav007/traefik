@@ -59,7 +59,7 @@ stages:
             value1=`cat 'namespace_build.yaml'`
             echo "$value1"
 
-            echo "********************************"
+            echo "$********************************"
             echo 'Hello world'           
             cat 'customermanagementapi-v1.yaml'
             echo 'Hello world 0'  
@@ -71,35 +71,35 @@ stages:
             value1=`cat 'customermanagementapi_build.yaml'`
             echo 'Hello world 2'  
             echo "$value1"
-            echo "********************************"
+            echo "$********************************"
             cat 'customertraefikroute.yaml'
             value=`cat 'customertraefikroute.yaml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'customertraefikroute_build.yaml'
             value1=`cat 'customertraefikroute_build.yaml'`
             echo "$value1"
-            echo "********************************"
+            echo "$********************************"
             cat 'PVC.yaml'
             value=`cat 'PVC.yaml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'PVC_build.yaml'
             value1=`cat 'PVC_build.yaml'`
             echo "$value1"
-            echo "********************************"
+            echo "$********************************"
             cat 'rabbitmq.yml'
             value=`cat 'rabbitmq.yml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'rabbitmq_build.yaml'
             value1=`cat 'rabbitmq_build.yaml'`
             echo "$value1"
-            echo "********************************"
+            echo "$********************************"
             cat 'rabbitsvc.yml'
             value=`cat 'rabbitsvc.yml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'rabbitsvc_build.yaml'
             value1=`cat 'rabbitsvc_build.yaml'`
             echo "$value1"
-            echo "********************************"
+            echo "$********************************"
             cat 'sqldeployment.yaml'
             value=`cat 'sqldeployment.yaml'`
             value=${value//##Namespace##/$Var2}
@@ -107,7 +107,30 @@ stages:
             value1=`cat 'sqldeployment_build.yaml'`
             echo "$value1"
 
-            echo "********************************"
+            echo "$********************************"
+            cat 'customer-secret.yaml'
+            value=`cat 'customer-secret.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'customer-secret_build.yaml'
+            value1=`cat 'customer-secret_build.yaml'`
+            echo "$value1"
+
+            echo "$********************************"
+            cat 'topsecret.yaml'
+            value=`cat 'topsecret.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'topsecret_build.yaml'
+            value1=`cat 'topsecret_build.yaml'`
+            echo "$value1"
+
+            echo "$********************************"
+            cat 'mssql-secret.yaml'
+            value=`cat 'mssql-secret.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'mssql-secret_build.yaml'
+            value1=`cat 'mssql-secret_build.yaml'`
+            echo "$value1"
+
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
     - task: PublishPipelineArtifact@1
