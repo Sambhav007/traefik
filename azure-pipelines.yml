@@ -57,6 +57,9 @@ stages:
             Var6=`echo $keyColorVal | sed -e 's/^[[:space:]]*//'`
 
             done < "$srcFilename"
+            echo $Var1
+            echo $Var2
+            echo $Var3
             comname:'caddy'
             
             echo 'Hello world'           
