@@ -152,7 +152,7 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'Traefikcluster'
-        namespace:  $(varname)
+        namespace:  kloss
         command: 'create'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
