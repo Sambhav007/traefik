@@ -146,11 +146,11 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'Traefikcluster'
-        namespace: 'kloss'
         command: 'create'
-        arguments: '--from-file=settings/appsettings_customersecret.json'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
+        arguments: '--from-file=settings/appsettings_customersecret.json'
+        namespace: 'kloss'
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: ''
