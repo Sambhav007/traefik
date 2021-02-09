@@ -142,17 +142,17 @@ stages:
         configuration: '/home/vsts/work/1/s/namespace_build.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
-    - task: Kubernetes@1
+    
+    
+    - task: KubernetesManifest@0
       inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'Traefikcluster'
-        command: 'apply'
-        arguments: -f settings.yaml
-        secretType: 'generic'
-        secretArguments: '--from-file=settings/appsettings_customersecret.json'
-        secretName: 'settingscustomerapi-appsettings'
+        action: 'createSecret'
+        kubernetesServiceConnection: 'Traefikcluster'
         namespace: 'kloss'
-        forceUpdate: false
+        secretType: 'generic'
+        secretName: 'settingscustomerapi-appsettings'
+        secretArguments: '--from-file=settings/appsettings_customersecret.json'
+
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: ''
