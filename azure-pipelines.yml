@@ -46,6 +46,7 @@ stages:
             keyName=${strarr[1]}
             echo "$keyName"
             keyNameVal=${strarr[3]}
+            keyNameVal = ${keyNameVal}
             echo "$keyNameVal"  
             Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
