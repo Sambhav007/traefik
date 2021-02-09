@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-     varname: vic
+     varname: ''
  
 stages:
 - stage: Publish
@@ -48,7 +48,7 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2"
-            varname: $Var2 
+            varname: ${Var2} 
             echo $(varname)
             echo '$******************************'
             cat 'namespace.yaml'
@@ -152,7 +152,7 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'Traefikcluster'
-        namespace:  varname
+        namespace:  $(varname)
         command: 'create'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
