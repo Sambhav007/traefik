@@ -37,7 +37,7 @@ stages:
           # Write your commands here
           
           echo 'Hello world'
-          cat '/home/vsts/work/1/s/file'
+          #cat '/home/vsts/work/1/s/file'
                       extfile=`cat '/home/vsts/work/1/s/file'`
                       echo "$extfile"
     - task: Bash@3
@@ -48,7 +48,7 @@ stages:
            
            
             comname:'caddy'
-            cat '/home/vsts/work/1/s/file'
+            #cat '/home/vsts/work/1/s/file'
                       extfile=`cat '/home/vsts/work/1/s/file'`
                       echo "$extfile"
             echo 'Hello world'           
