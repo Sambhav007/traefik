@@ -37,8 +37,8 @@ stages:
           # Write your commands here
           
           echo 'Hello world'
-          cat '/home/vsts/work/1/s/file.txt'
-                      extfile=`cat '/home/vsts/work/1/s/file.txt'`
+          cat '/home/vsts/work/1/s/file'
+                      extfile=`cat '/home/vsts/work/1/s/file'`
                       echo "$extfile"
     - task: Bash@3
       inputs:
@@ -48,7 +48,9 @@ stages:
            
            
             comname:'caddy'
-            
+            cat '/home/vsts/work/1/s/file'
+                      extfile=`cat '/home/vsts/work/1/s/file'`
+                      echo "$extfile"
             echo 'Hello world'           
             cat 'customermanagementapi-v1.yaml'
             echo 'Hello world 0'  
