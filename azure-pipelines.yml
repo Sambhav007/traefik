@@ -8,9 +8,6 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
-
-variables:
-     varname: ''
  
 stages:
 - stage: Publish
@@ -48,8 +45,6 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2"
-            varname: ${Var2} 
-            echo $(varname)
             echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
@@ -157,6 +152,7 @@ stages:
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=settings/appsettings_customersecret.json'
         namespace:  'kloss'
+        containerRegistryType: 'Azure Container Registry'
         
       
     - task: PublishPipelineArtifact@1
