@@ -63,7 +63,7 @@ stages:
                       echo "Var1:" $Var1
                       echo "Var2:" $Var2
                       echo "Var3:"  $Var3
-                      done < "/home/vsts/work/1/s/file.txt"
+                      done < '/home/vsts/work/1/s/file.txt'
     - task: Bash@3
       inputs:
         targetType: 'inline'
@@ -72,7 +72,9 @@ stages:
            
            
             comname:'caddy'
-            
+            cat '/home/vsts/work/1/s/file.txt'
+            extfile=`cat '/home/vsts/work/1/s/file.txt'`
+            echo "$extfile"
             echo 'Hello world'           
             cat 'customermanagementapi-v1.yaml'
             echo 'Hello world 0'  
