@@ -78,15 +78,15 @@ stages:
             value1=`cat 'PVC_build.yaml'`
             echo "$value1"
             echo "********************************"
-            cat 'rabbitmq.yaml'
-            value=`cat 'rabbitmq.yaml'`
+            cat 'rabbitmq.yml'
+            value=`cat 'rabbitmq.yml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'rabbitmq_build.yaml'
             value1=`cat 'rabbitmq_build.yaml'`
             echo "$value1"
             echo "********************************"
-            cat 'rabbitsvc.yaml'
-            value=`cat 'rabbitsvc.yaml'`
+            cat 'rabbitsvc.yml'
+            value=`cat 'rabbitsvc.yml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'rabbitsvc_build.yaml'
             value1=`cat 'rabbitsvc_build.yaml'`
