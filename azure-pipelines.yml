@@ -40,6 +40,6 @@ stages:
             echo 'after creation of traefik'  
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '/'
+        targetPath: ''
         artifact: 'traefikdata'
         publishLocation: 'pipeline'
