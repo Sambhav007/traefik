@@ -45,7 +45,7 @@ stages:
             read -a strarr <<<"$extfile"
             keyName=${strarr[1]}
             echo "$keyName"
-            keyNameVal=${strarr[3]}
+            keyNameVal=${strarr[3]^h}
             echo "$keyNameVal"  
             Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
