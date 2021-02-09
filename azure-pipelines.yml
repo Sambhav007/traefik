@@ -48,18 +48,19 @@ stages:
             keyLogoVal=${strarr[10]}
             keyColor=${strarr[13]}
             keyColorVal=${strarr[15]}
-
+       
             Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             Var3=`echo $keyLogo | sed -e 's/^[[:space:]]*//'`
             Var4=`echo $keyLogoVal | sed -e 's/^[[:space:]]*//'`
             Var5=`echo $keyColor | sed -e 's/^[[:space:]]*//'`
             Var6=`echo $keyColorVal | sed -e 's/^[[:space:]]*//'`
-
+            
+            echo "Var1:" $Var1
+            echo "Var2:" $Var2
+            echo "Var3:"  $Var3
             done < "$srcFilename"
-            echo $Var1
-            echo $Var2
-            echo $Var3
+           
             comname:'caddy'
             
             echo 'Hello world'           
