@@ -148,9 +148,9 @@ stages:
         kubernetesServiceEndpoint: 'Traefikcluster'
         namespace: 'kloss'
         command: 'create'
-        arguments: '--from-file=settings/appsettings_customersecret.json'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
+        arguments: '--from-file=settings/appsettings_customersecret.json'
         forceUpdate: false
     - task: PublishPipelineArtifact@1
       inputs:
