@@ -37,10 +37,10 @@ stages:
           # Write your commands here
             IFS=',{}:".//'
             srcFilename='/home/vsts/work/1/s/file'
-            echo "File:" $srcFilename
+            #echo "File:" $srcFilename
             echo 'Hi Inside while loop'
             cat '/home/vsts/work/1/s/file'
-            cat $srcFilename
+            #cat $srcFilename
             while read line; do
             # reading each line
             #echo "Line Data : $line";
