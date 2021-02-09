@@ -1,0 +1,117 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+ 
+
+
+stages:
+- stage: Publish
+  displayName: Publish of release pipeline
+  jobs:
+  - job: PreReleasePrepForhospitalMicroservice
+    
+    displayName: Pre Release Preparation (Bash build id and Publish for Release pipeline)
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+                      mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
+                      wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
+                      tar -xf azcopy_v10.tar.gz --strip-components=1
+                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-09T07:35:44Z&se=2021-02-09T15:35:44Z&spr=https&sv=2019-12-12&sr=b&sig=f6t1vSF82T6Zz0AOKvtLkGpBQMbTUuF8Uom8ixGWc48%3D" "/home/vsts/work/1/s"
+                      echo $(Agent.ToolsDirectory)
+    
+   
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+           
+           
+            comname:'caddy'
+            IFS=',{}:".//'
+            extfile=`cat '/home/vsts/work/1/s/file'`
+            echo "$extfile"
+            read -a strarr <<<"$extfile"
+            keyName=${strarr[1]}
+            echo "$keyName"
+            keyNameVal=${strarr[3]}
+            echo "$keyNameVal"  
+            Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
+            Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
+            echo "$Var1" 
+            echo "$Var2" 
+
+            cat 'namespace.yaml'
+            value=`cat 'namespace.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'namespace_build.yaml'
+            value1=`cat 'namespace_build.yaml'`
+            echo "$value1"
+
+            echo "********************************"
+            echo 'Hello world'           
+            cat 'customermanagementapi-v1.yaml'
+            echo 'Hello world 0'  
+            value=`cat 'customermanagementapi-v1.yaml'`
+            echo 'Hello world 0.25'  
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'customermanagementapi_build.yaml'
+            echo 'Hello world 1'  
+            value1=`cat 'customermanagementapi_build.yaml'`
+            echo 'Hello world 2'  
+            echo "$value1"
+            echo "********************************"
+            cat 'customertraefikroute.yaml'
+            value=`cat 'customertraefikroute.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'customertraefikroute_build.yaml'
+            value1=`cat 'customertraefikroute_build.yaml'`
+            echo "$value1"
+            echo "********************************"
+            cat 'PVC.yaml'
+            value=`cat 'PVC.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'PVC_build.yaml'
+            value1=`cat 'PVC_build.yaml'`
+            echo "$value1"
+            echo "********************************"
+            cat 'rabbitmq.yml'
+            value=`cat 'rabbitmq.yml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'rabbitmq_build.yaml'
+            value1=`cat 'rabbitmq_build.yaml'`
+            echo "$value1"
+            echo "********************************"
+            cat 'rabbitsvc.yml'
+            value=`cat 'rabbitsvc.yml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'rabbitsvc_build.yaml'
+            value1=`cat 'rabbitsvc_build.yaml'`
+            echo "$value1"
+            echo "********************************"
+            cat 'sqldeployment.yaml'
+            value=`cat 'sqldeployment.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'sqldeployment_build.yaml'
+            value1=`cat 'sqldeployment_build.yaml'`
+            echo "$value1"
+
+            echo "********************************"
+            mkdir 'traefikdata'  
+            echo 'after creation of traefik'  
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: ''
+        artifact: 'traefikdata'
+        publishLocation: 'pipeline'
