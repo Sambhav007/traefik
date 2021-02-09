@@ -29,7 +29,7 @@ stages:
             echo 'Hello world 0'  
             value=`cat 'customermanagementapi-v1.yaml'`
             echo 'Hello world 0.25'  
-            value=${value//##Namespace##/'victory'}
+            value=${value//##Namespace##/${namespace}}
             
             echo "$value" > 'customermanagementapi.yaml'
             echo 'Hello world 1'  
@@ -40,6 +40,6 @@ stages:
             echo 'after creation of traefik'  
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: 'traefik'
+        targetPath: '/'
         artifact: 'traefikdata'
         publishLocation: 'pipeline'
