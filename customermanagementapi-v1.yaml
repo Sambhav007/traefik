@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: customermanagementapi
+    app: webapp
+  name: customermanagementapi-deploy
+  namespace: ##Namespace##
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: customermanagementapi
+      app: webapp
+  template:
+    metadata:
+      labels:
+        name: customermanagementapi
+        app: webapp
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: demok8.azurecr.io/ps/customermanagement:0.0.1
+        imagePullPolicy: IfNotPresent
+        name: customermanagementapi
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 5100
+        volumeMounts:
+        - name: settings
+          mountPath: /settings
+          readOnly: true
+      volumes:
+      - name: settings
+        secret:
+          secretName: settingscustomerapi-appsettings
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: topsecretregistryconnection
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: customermanagementapi
+  name: customermanagementapi-service
+  namespace: ##Namespace##
+spec:
+  type: ClusterIP
+  ports:
+  - name: http   
+    protocol: TCP 
+    port: 5100
+  selector:
+    name: customermanagementapi
+    app: webapp
+      

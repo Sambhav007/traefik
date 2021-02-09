@@ -1,0 +1,20 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: customermgmttraefikroutenatgeo
+spec:
+  entryPoints:
+    - insecure
+    - websecure
+  routes:
+    - match: (Host(`traefikerx.southeastasia.cloudapp.azure.com`) && (Path(`/api/customers`))&& (Headers(`Company`,`natgeo`))&& ((Method(`GET`) ) || (Method(`POST`) )))
+      kind: Rule   
+      middlewares:
+        - name: pitstop-jwtauth-natgeo
+      services:
+        - name: customermanagementapi-service
+          namespace: ##Namespace##
+          port: 5100
+          
+      tls:
+        certResolver: le   

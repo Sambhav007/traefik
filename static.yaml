@@ -1,0 +1,40 @@
+entryPoints:
+  insecure:
+    address: ":80"
+  websecure:
+    address: ":443"
+  internal:
+    address: ":8888"
+
+
+ 
+api:
+  dashboard: true
+  insecure: true
+  debug: true
+
+apiportal:
+  path: spec.json
+ 
+  
+providers:
+  kubernetesCRD: {}
+    
+mesh: {}
+
+authSources:
+  jwtSourceNat:
+    jwt:
+      jwksUrl:  https://keycloak-entcloud.southeastasia.azurecontainer.io/auth/realms/Demo/protocol/openid-connect/certs
+  jwtSourceVic:
+    jwt:
+      jwksUrl: https://keycloak-entcloud.southeastasia.azurecontainer.io/auth/realms/Demo2/protocol/openid-connect/certs
+      
+
+certificatesResolvers:
+  le:
+    acme:
+      email: cheshta.a@hcl.com
+      httpChallenge:
+        # used during the challenge
+        entryPoint: insecure

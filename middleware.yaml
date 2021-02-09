@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: pitstop-jwtauth-natgeo
+spec:
+  plugin:
+    jwtAuth:
+      source: jwtSourceNat
+      forwardAuthorization: true
+      username: userId
+      claims: Contains(`email`, `gmail.com`)
+      claims: Equals(`user_role`,`admin`)
+      
