@@ -9,14 +9,11 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
  
-
-
 stages:
 - stage: Publish
   displayName: Publish of release pipeline
   jobs:
   - job: PreReleasePrepForhospitalMicroservice
-    
     displayName: Pre Release Preparation (Bash build id and Publish for Release pipeline)
     steps:
     - task: Bash@3
@@ -27,17 +24,13 @@ stages:
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-09T07:35:44Z&se=2021-02-09T15:35:44Z&spr=https&sv=2019-12-12&sr=b&sig=f6t1vSF82T6Zz0AOKvtLkGpBQMbTUuF8Uom8ixGWc48%3D" "/home/vsts/work/1/s"
+                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-09T15:54:50Z&se=2021-02-09T23:54:50Z&spr=https&sv=2019-12-12&sr=b&sig=tXx%2FeVHWmQI3dOlCIyKcXbj6FYj%2BXdLJxcW71R%2BDFaQ%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
-    
-   
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
           # Write your commands here
-           
-           
             comname:'caddy'
             IFS=',{}:".//'
             extfile=`cat '/home/vsts/work/1/s/file'`
@@ -52,6 +45,7 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2" 
+            echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
             value=${value//##Namespace##/$Var2}
@@ -137,8 +131,6 @@ stages:
             echo "$value" > 'settings/appsettings_customersecret.json'
             value1=`cat 'settings/appsettings_customersecret.json'`
             echo "$value1"
-
-
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
     - task: Kubernetes@1
@@ -155,7 +147,7 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'Traefikcluster'
-        namespace:  kloss
+        namespace:  $Var2
         command: 'create'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
