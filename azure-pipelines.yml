@@ -1,0 +1,45 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+  namespace: 'victory'
+
+stages:
+- stage: Publish
+  displayName: Publish of release pipeline
+  jobs:
+  - job: PreReleasePrepForhospitalMicroservice
+    dependsOn: Build
+    displayName: Pre Release Preparation (Bash build id and Publish for Release pipeline)
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+            
+            echo 'Hello world'           
+            cat 'traefik/customermanagementapi-v1.yaml'
+            echo 'Hello world 0'  
+            value=`cat 'traefik/customermanagementapi-v1.yaml'`
+            echo 'Hello world 0.25'  
+            value=${value//##Namespace##/$(namespace)}
+            
+            echo "$value" > 'traefik/customermanagementapi.yaml'
+            echo 'Hello world 1'  
+            value1=`cat 'traefik/customermanagementapi.yaml'`
+            echo 'Hello world 2'  
+            echo "$value1"
+            mkdir 'traefik/traefikdata'  
+            echo 'after creation of traefik'  
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: 'traefik'
+        artifact: 'traefikdata'
+        publishLocation: 'pipeline'
