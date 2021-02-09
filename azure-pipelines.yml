@@ -8,6 +8,9 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
+
+variables:
+     varname: vic
  
 stages:
 - stage: Publish
@@ -45,6 +48,8 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2"
+            varname = $Var2
+            echo "$varname"
             echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
@@ -150,7 +155,7 @@ stages:
         
         action: 'createSecret'
         kubernetesServiceConnection: 'Traefikcluster'
-        namespace: 'kloss'
+        namespace: $(varname)
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=settings/appsettings_customersecret.json'
