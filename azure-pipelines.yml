@@ -127,7 +127,7 @@ stages:
             cat 'mssql-secret.yaml'
             value=`cat 'mssql-secret.yaml'`
             value=${value//##Namespace##/$Var2}
-            echo "$value" > 'mssql-secret.yaml.yaml'
+            echo "$value" > 'mssql-secret_build.yaml'
             value1=`cat 'mssql-secret_build.yaml'`
             echo "$value1"
 
