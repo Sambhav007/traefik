@@ -152,7 +152,7 @@ stages:
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=settings/appsettings_customersecret.json'
         namespace:  'kloss'
-        containerRegistryType: 'Azure Container Registry'
+       
         
       
     - task: PublishPipelineArtifact@1
