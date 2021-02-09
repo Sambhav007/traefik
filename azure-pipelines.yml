@@ -29,40 +29,47 @@ stages:
                       tar -xf azcopy_v10.tar.gz --strip-components=1
                       $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-09T07:35:44Z&se=2021-02-09T15:35:44Z&spr=https&sv=2019-12-12&sr=b&sig=f6t1vSF82T6Zz0AOKvtLkGpBQMbTUuF8Uom8ixGWc48%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
-                  
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
           # Write your commands here
-            IFS=',{}:".//'
-            srcFilename='/home/vsts/work/1/s/file'
-            #echo "File:" $srcFilename
-            echo 'Hi Inside while loop'
-            cat '/home/vsts/work/1/s/file'
-            #cat $srcFilename
-            while read line; do
-            # reading each line
-            #echo "Line Data : $line";
-            read -a strarr <<<"$line"
-            keyName=${strarr[1]}
-            keyNameVal=${strarr[3]}
-            keyLogo=${strarr[5]}
-            keyLogoVal=${strarr[10]}
-            keyColor=${strarr[13]}
-            keyColorVal=${strarr[15]}
-       
-            Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
-            Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
-            Var3=`echo $keyLogo | sed -e 's/^[[:space:]]*//'`
-            Var4=`echo $keyLogoVal | sed -e 's/^[[:space:]]*//'`
-            Var5=`echo $keyColor | sed -e 's/^[[:space:]]*//'`
-            Var6=`echo $keyColorVal | sed -e 's/^[[:space:]]*//'`
-            
-            echo "Var1:" $Var1
-            echo "Var2:" $Var2
-            echo "Var3:"  $Var3
-            done < '/home/vsts/work/1/s/file'
+          
+          echo 'File Reading Script'
+           IFS=',{}:".//'
+                      srcFilename='/home/vsts/work/1/s/file.txt'
+                      #echo "File:" $srcFilename
+                      echo 'Hi Inside while loop'
+                      cat '/home/vsts/work/1/s/file'
+                      #cat $srcFilename
+                      while read line; do
+                      # reading each line
+                      #echo "Line Data : $line";
+                      read -a strarr <<<"$line"
+                      keyName=${strarr[1]}
+                      keyNameVal=${strarr[3]}
+                      keyLogo=${strarr[5]}
+                      keyLogoVal=${strarr[10]}
+                      keyColor=${strarr[13]}
+                      keyColorVal=${strarr[15]}
+                 
+                      Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
+                      Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
+                      Var3=`echo $keyLogo | sed -e 's/^[[:space:]]*//'`
+                      Var4=`echo $keyLogoVal | sed -e 's/^[[:space:]]*//'`
+                      Var5=`echo $keyColor | sed -e 's/^[[:space:]]*//'`
+                      Var6=`echo $keyColorVal | sed -e 's/^[[:space:]]*//'`
+                      
+                      echo "Var1:" $Var1
+                      echo "Var2:" $Var2
+                      echo "Var3:"  $Var3
+                      done < "/home/vsts/work/1/s/file.txt"
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+           
            
             comname:'caddy'
             
