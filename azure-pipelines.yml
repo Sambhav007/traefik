@@ -51,7 +51,7 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2" 
-            
+            echo "********************************"
             echo 'Hello world'           
             cat 'customermanagementapi-v1.yaml'
             echo 'Hello world 0'  
@@ -63,35 +63,35 @@ stages:
             value1=`cat 'customermanagementapi_build.yaml'`
             echo 'Hello world 2'  
             echo "$value1"
-
+            echo "********************************"
             cat 'customertraefikroute.yaml'
             value=`cat 'customertraefikroute.yaml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'customertraefikroute_build.yaml'
             value1=`cat 'customertraefikroute_build.yaml'`
             echo "$value1"
-
+            echo "********************************"
             cat 'PVC.yaml'
             value=`cat 'PVC.yaml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'PVC_build.yaml'
             value1=`cat 'PVC_build.yaml'`
             echo "$value1"
-
+            echo "********************************"
             cat 'rabbitmq.yaml'
             value=`cat 'rabbitmq.yaml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'rabbitmq_build.yaml'
             value1=`cat 'rabbitmq_build.yaml'`
             echo "$value1"
-
+            echo "********************************"
             cat 'rabbitsvc.yaml'
             value=`cat 'rabbitsvc.yaml'`
             value=${value//##Namespace##/$Var2}
             echo "$value" > 'rabbitsvc_build.yaml'
             value1=`cat 'rabbitsvc_build.yaml'`
             echo "$value1"
-
+            echo "********************************"
             cat 'sqldeployment.yaml'
             value=`cat 'sqldeployment.yaml'`
             value=${value//##Namespace##/$Var2}
@@ -99,7 +99,7 @@ stages:
             value1=`cat 'sqldeployment_build.yaml'`
             echo "$value1"
 
-
+            echo "********************************"
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
     - task: PublishPipelineArtifact@1
