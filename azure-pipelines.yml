@@ -14,8 +14,6 @@ pool:
 stages:
 - stage: Publish
   displayName: Publish of release pipeline
-  variables:
-    companyname: 'victory' 
   jobs:
   - job: PreReleasePrepForhospitalMicroservice
     
