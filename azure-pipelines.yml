@@ -51,6 +51,14 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2" 
+
+            cat 'namespace.yaml'
+            value=`cat 'namespace.yaml'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'namespace_build.yaml'
+            value1=`cat 'namespace_build.yaml'`
+            echo "$value1"
+
             echo "********************************"
             echo 'Hello world'           
             cat 'customermanagementapi-v1.yaml'
