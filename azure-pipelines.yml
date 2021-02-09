@@ -9,8 +9,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
  
-variables:
-  global_variable: vic    # this is available to all jobs
+
 
 stages:
 - stage: Publish
@@ -53,8 +52,6 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2" 
-            global_variable: ${Var1}
-            echo "variableglobal" ::: "$global_variable"
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
             value=${value//##Namespace##/$Var2}
@@ -158,7 +155,7 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'Traefikcluster'
-        namespace:  $(global_variable)
+        namespace:  kloss
         command: 'create'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
