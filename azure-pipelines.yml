@@ -48,8 +48,8 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2"
-            varname = $Var2
-            echo "$varname"
+            varname: ${Var2}
+            echo $(varname)
             echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
