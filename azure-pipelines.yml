@@ -132,6 +132,14 @@ stages:
             value1=`cat 'mssql-secret_build.yaml'`
             echo "$value1"
 
+            cat 'mssql-secret.yaml'
+            value=`cat 'settings/appsettings_customersecret_gen.json'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'settings/appsettings_customersecret.json'
+            value1=`cat 'settings/appsettings_customersecret.json'`
+            echo "$value1"
+
+
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
     - task: Kubernetes@1
@@ -141,6 +149,18 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: '/home/vsts/work/1/s/namespace_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+    
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Traefikcluster'
+        namespace: '$Var2'
+        command: 'create'
+        useConfigurationFile: true
+        configurationType: 'inline'
+        inline: 'generic settingscustomerapi-appsettings --from-file=./settings/appsettings_customersecret.json'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
     - task: PublishPipelineArtifact@1
