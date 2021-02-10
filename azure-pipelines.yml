@@ -8,18 +8,28 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
- 
 
+variables:
+- name: one
+  value: initialValue 
 
 stages:
 - stage: Publish
   displayName: Publish of release pipeline
   jobs:
-  - job: PreReleasePrepForhospitalMicroservice
-    
-    displayName: Pre Release Preparation (Bash build id and Publish for Release pipeline)
+  - job: PreReleasePrepForTraefikAndAPI
+    displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '/home/vsts/work/1/s/'
+        Contents: 'teectl'
+        TargetFolder: 'usr/local/bin'
+        OverWrite: true
+
+
     - task: Bash@3
+      displayName: Copy blob file using Azcopy
       inputs:
         targetType: 'inline'
         script: |
@@ -27,17 +37,15 @@ stages:
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-09T07:35:44Z&se=2021-02-09T15:35:44Z&spr=https&sv=2019-12-12&sr=b&sig=f6t1vSF82T6Zz0AOKvtLkGpBQMbTUuF8Uom8ixGWc48%3D" "/home/vsts/work/1/s"
+                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-10T13:12:10Z&se=2021-02-10T21:12:10Z&spr=https&sv=2019-12-12&sr=b&sig=nvGv6dSkE1H%2FEJgLCFwkbWT7d6e84npe4xcQCea3lpU%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
-    
-   
+      
     - task: Bash@3
+      displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
         targetType: 'inline'
         script: |
           # Write your commands here
-           
-           
             comname:'caddy'
             IFS=',{}:".//'
             extfile=`cat '/home/vsts/work/1/s/file'`
@@ -51,8 +59,14 @@ stages:
             Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
-            echo "$Var2" 
-
+            echo "$Var2"
+            Write-Host "##vso[task.setvariable variable=one]$(Var2)"
+            #comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
+            echo ${{ variables.one }} # outputs initialValue
+            echo $(one)
+    
+            
+            echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
             value=${value//##Namespace##/$Var2}
@@ -132,17 +146,67 @@ stages:
             value1=`cat 'mssql-secret_build.yaml'`
             echo "$value1"
 
+            cat 'mssql-secret.yaml'
+            value=`cat 'settings/appsettings_customersecret_gen.json'`
+            value=${value//##Namespace##/$Var2}
+            echo "$value" > 'settings/appsettings_customersecret.json'
+            value1=`cat 'settings/appsettings_customersecret.json'`
+            echo "$value1"
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
     - task: Kubernetes@1
+      displayName: Create namespace in kubernetes cluster
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'Traefikcluster'
+        kubernetesServiceEndpoint: 'testingcluster'
         command: 'apply'
         useConfigurationFile: true
         configuration: '/home/vsts/work/1/s/namespace_build.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
+    
+    
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'testingcluster'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '/home/vsts/work/1/s/PVC_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+    
+
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'testingcluster'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '/home/vsts/work/1/s/mssql-secret_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'testingcluster'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '/home/vsts/work/1/s/sqldeployment_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+    - task: KubernetesManifest@0
+      displayName: Create customer secret
+       
+      inputs:
+        action: 'createSecret'
+        kubernetesServiceConnection: 'testingcluster'
+        namespace: 'kloss'
+        secretType: 'generic'
+        secretName: 'settingscustomerapi-appsettings'
+        secretArguments: '--from-file=./settings/appsettings_customersecret.json'
+
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: ''
