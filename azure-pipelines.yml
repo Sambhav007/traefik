@@ -23,7 +23,7 @@ stages:
     - task: CopyFiles@2
       inputs:
         SourceFolder: '/home/vsts/work/1/s/'
-        Contents: '**/*.exe'
+        Contents: '**/*'
         TargetFolder: 'usr/local/bin'
         OverWrite: true
         
@@ -34,7 +34,7 @@ stages:
           # Write your commands here
           
           echo 'Hello world'
-          /usr/local/bin/teectl.exe
+          /usr/local/bin/teectl
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
