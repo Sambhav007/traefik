@@ -10,7 +10,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  Foo : one
+  
+  Foo: "one"
    
 
 stages:
@@ -60,7 +61,7 @@ stages:
             namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             #echo "$Var1" 
             echo "$namespace"
-            Write-Host "##vso[task.setvariable variable=one]$(namespace)"
+            echo "##vso[task.setvariable variable=Foo]$(namespace)"
             #comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo ${{ variables.one }} # outputs initialValue
             echo $(one)
