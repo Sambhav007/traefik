@@ -9,7 +9,8 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-   
+variables:
+  Foo : ''
 
 stages:
 - stage: Publish
@@ -24,7 +25,6 @@ stages:
         Contents: 'teectl'
         TargetFolder: 'usr/local/bin'
         OverWrite: true
-
 
     - task: Bash@3
       displayName: Copy blob file using Azcopy
@@ -58,8 +58,8 @@ stages:
             namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             #echo "$Var1" 
             echo "$namespace"
-            #echo '##vso[task.setvariable variable=Foo]$(namespace)'
-            Foo: ${namespace}
+            echo '##vso[task.setvariable variable=Foo]$namespace'
+            echo "$Foo"
             
             echo '$******************************'
             cat 'namespace.yaml'
