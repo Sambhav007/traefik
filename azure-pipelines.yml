@@ -16,11 +16,7 @@ stages:
   displayName: Publish of release pipeline
   jobs:
   - job: PreReleasePrepForTraefikAndAPI
-    variables:
-      Foo: one
-
     displayName: Pre Release Preparation (Publish for Release pipeline)
-   
     steps:
     - task: CopyFiles@2
       inputs:
@@ -64,37 +60,6 @@ stages:
             echo "$namespace"
             #echo '##vso[task.setvariable variable=Foo]$(namespace)'
             Foo: ${namespace}
-            comname = ${namespace}
-            #comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
-            #echo ${{ variables.Foo }} # outputs initialValue
-            echo $(Foo)
-            echo $(comname)
-            comname = $(namespace)
-            #comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
-            #echo ${{ variables.Foo }} # outputs initialValue
-            
-            echo $(comname)
-            comname = $namespace
-            
-            echo $(comname)
-            comname = "$namespace"
-            
-            echo $(comname)
-            comname = '$namespace'
-            
-            echo $(comname)
-
-            
-            Foo = $namespace
-            
-            echo $(Foo)
-            Foo = "$namespace"
-            
-            echo $(Foo)
-            Foo = '$namespace'
-            
-            echo $(Foo)
-    
             
             echo '$******************************'
             cat 'namespace.yaml'
@@ -184,6 +149,16 @@ stages:
             echo "$value1"
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
+           displayName: Create namespace in kubernetes cluster
+           inputs:
+            action: 'createSecret'
+            kubernetesServiceConnection: 'testingcluster'
+            namespace: $(namespace)
+            secretType: 'generic'
+            secretName: 'mssql'
+            secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
+
+        
     - task: Kubernetes@1
       displayName: Create namespace in kubernetes cluster
       inputs:
@@ -207,14 +182,7 @@ stages:
         containerRegistryType: 'Azure Container Registry'
     
      
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
-        secretType: 'generic'
-        secretName: 'mssql'
-        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
+    
     - task: KubernetesManifest@0
       displayName: Create customer secret
       inputs:
