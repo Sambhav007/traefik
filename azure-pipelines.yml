@@ -27,14 +27,17 @@ stages:
         TargetFolder: 'usr/local/bin'
         OverWrite: true
 
-    - task: Kubernetes@1
+   
+    - task: Bash@3
       inputs:
-         connectionType: 'Kubernetes Service Connection'
-         kubernetesServiceEndpoint: 'testingcluster'
-         arguments: 'teectl'
-         secretType: 'dockerRegistry'
-         containerRegistryType: 'Azure Container Registry'
-    
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          echo 'Hello world'
+          cd  usr/local/bin
+          chmod +x teectl
+          teectl
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
