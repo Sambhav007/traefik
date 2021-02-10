@@ -26,7 +26,16 @@ stages:
         Contents: '**/*.exe'
         TargetFolder: 'usr/local/bin'
         OverWrite: true
- 
+        
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          echo 'Hello world'
+          cd /usr/local/bin
+          teectl setup --kubernete
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
