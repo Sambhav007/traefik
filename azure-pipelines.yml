@@ -157,6 +157,36 @@ stages:
         containerRegistryType: 'Azure Container Registry'
     
     
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'testingcluster'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '/home/vsts/work/1/s/PVC_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+    
+
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'testingcluster'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '/home/vsts/work/1/s/mssql-secret_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'testingcluster'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '/home/vsts/work/1/s/sqldeployment_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
     - task: KubernetesManifest@0
       displayName: Create customer secret
        
