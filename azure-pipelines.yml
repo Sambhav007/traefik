@@ -41,8 +41,7 @@ stages:
           cd ..
           cd /usr/local/bin
           pwd
-          chmod +x teectl
-          teectl
+          ./teectl
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
