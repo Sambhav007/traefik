@@ -205,7 +205,7 @@ stages:
         namespace: 'kloss'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
-        secretArguments: '--from-file=/home/vsts/work/1/s/settings/appsettings_customersecret.json'
+        secretArguments: '--from-file=./settings/appsettings_customersecret.json'
 
     - task: PublishPipelineArtifact@1
       inputs:
