@@ -47,7 +47,8 @@ stages:
               SourceFolder: '/home/vsts/work/1/s/'
               Contents: '**'
               TargetFolder: 'user/local/bin'
-              cd /usr/local/bin/teectl
+              cd /usr/local/bin/
+              teectl
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
