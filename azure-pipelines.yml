@@ -157,7 +157,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'Traefikcluster'
-        namespace: $(comname)
+        namespace: kloss
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=settings/appsettings_customersecret.json'
