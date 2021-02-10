@@ -55,7 +55,7 @@ stages:
     variables:
             namespace: $Var2
             varname: namespace
-            echo $(varname)
+            
             echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
