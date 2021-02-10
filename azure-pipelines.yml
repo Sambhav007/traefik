@@ -149,15 +149,6 @@ stages:
             echo "$value1"
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
-           displayName: Create namespace in kubernetes cluster
-           inputs:
-            action: 'createSecret'
-            kubernetesServiceConnection: 'testingcluster'
-            namespace: $(namespace)
-            secretType: 'generic'
-            secretName: 'mssql'
-            secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
-
         
     - task: Kubernetes@1
       displayName: Create namespace in kubernetes cluster
@@ -181,7 +172,14 @@ stages:
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
     
-     
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'createSecret'
+        kubernetesServiceConnection: 'testingcluster'
+        namespace: 'kloss'
+        secretType: 'generic'
+        secretName: 'mssql'
+        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
     
     - task: KubernetesManifest@0
       displayName: Create customer secret
