@@ -40,8 +40,8 @@ stages:
           # Write your commands here
           
           echo 'Hello world'
-          /home/vsts/work/1/s/chmod +x teectl
-          /home/vsts/work/1/s/teectl
+          #/home/vsts/work/1/s/chmod +x teectl
+          /home/vsts/work/1/s/teectl.exe
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
