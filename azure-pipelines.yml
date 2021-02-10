@@ -187,6 +187,17 @@ stages:
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         
+    
+    - task: KubernetesManifest@0
+      displayName: Create customer secret
+      inputs:
+        action: 'createSecret'
+        kubernetesServiceConnection: 'testingcluster'
+        namespace: 'kloss'
+        secretType: 'generic'
+        secretName: 'settingscustomerapi-appsettings'
+        secretArguments: '--from-file=./settings/appsettings_customersecret.json'
+
     - task: Kubernetes@1
       inputs:
         connectionType: 'Kubernetes Service Connection'
@@ -196,17 +207,6 @@ stages:
         configuration: '/home/vsts/work/1/s/sqldeployment_build.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
-    - task: KubernetesManifest@0
-      displayName: Create customer secret
-       
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
-        secretType: 'generic'
-        secretName: 'settingscustomerapi-appsettings'
-        secretArguments: '--from-file=./settings/appsettings_customersecret.json'
-
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: ''
