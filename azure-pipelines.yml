@@ -38,7 +38,8 @@ stages:
           cd ..
           cd ..
           cd ..
-          cd usr/local/bin
+          cd ..
+          cd /usr/local/bin
           pwd
           chmod +x teectl
           teectl
