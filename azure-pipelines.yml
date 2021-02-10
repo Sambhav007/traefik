@@ -63,6 +63,7 @@ stages:
             #echo "$Var1" 
             echo "$namespace"
             echo '##vso[task.setvariable variable=Foo]$(namespace)'
+            Foo: $(namespace)
             #comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo ${{ variables.Foo }} # outputs initialValue
             echo $(Foo)
