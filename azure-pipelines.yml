@@ -34,8 +34,7 @@ stages:
           # Write your commands here
           
           echo 'Hello world'
-          cd /usr/local/bin
-          teectl setup --kubernete
+          /usr/local/bin/teectl setup --kubernete
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
