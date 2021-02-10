@@ -20,7 +20,13 @@ stages:
   - job: PreReleasePrepForTraefikAndAPI
     displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
-    
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '/home/vsts/work/1/s/'
+        Contents: '**/*.exe'
+        TargetFolder: 'usr/local/bin'
+        OverWrite: true
+ 
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
@@ -33,12 +39,6 @@ stages:
                       $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-10T04:42:04Z&se=2021-02-10T12:42:04Z&spr=https&sv=2019-12-12&sr=b&sig=5lv4KlEsORE9h8Lky1rM9W9GZebegn%2BMO%2FXhjt7hsxY%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
       
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '/home/vsts/work/1/s/'
-        Contents: '**/*.exe'
-        TargetFolder: 'usr/local/bin'
-        OverWrite: true
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
