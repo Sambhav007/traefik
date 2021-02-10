@@ -176,18 +176,15 @@ stages:
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
     
-
-    - task: Kubernetes@1
+     
+    - task: KubernetesManifest@0
       inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'testingcluster'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: '/home/vsts/work/1/s/mssql-secret_build.yaml'
-        secretType: 'dockerRegistry'
-        containerRegistryType: 'Azure Container Registry'
-        
-    
+        action: 'createSecret'
+        kubernetesServiceConnection: 'testingcluster'
+        namespace: 'kloss'
+        secretType: 'generic'
+        secretName: 'mssql'
+        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
     - task: KubernetesManifest@0
       displayName: Create customer secret
       inputs:
