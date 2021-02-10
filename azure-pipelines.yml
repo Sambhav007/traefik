@@ -34,6 +34,10 @@ stages:
           # Write your commands here
           pwd
           echo 'Hello world'
+          cd ..
+          cd ..
+          cd ..
+          cd ..
           cd usr/local/bin
           pwd
           chmod +x teectl
