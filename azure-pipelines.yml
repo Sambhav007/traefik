@@ -34,7 +34,8 @@ stages:
           # Write your commands here
           pwd
           echo 'Hello world'
-          cd  usr/local/bin
+          cd usr/local/bin
+          pwd
           chmod +x teectl
           teectl
     - task: Bash@3
