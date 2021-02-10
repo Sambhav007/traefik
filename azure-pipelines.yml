@@ -27,21 +27,7 @@ stages:
         TargetFolder: 'usr/local/bin'
         OverWrite: true
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          pwd
-          echo 'Hello world'
-          cd ..
-          cd ..
-          cd ..
-          cd ..
-          cd ..
-          cd /usr/local/bin
-          pwd
-          ./teectl
+
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
