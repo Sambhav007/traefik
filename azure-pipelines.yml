@@ -51,7 +51,7 @@ stages:
             Var2=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo "$Var1" 
             echo "$Var2"
-            echo '##vso[task.setvariable variable=one]$Var2'
+            echo '##vso[task.setvariable variable=one]${Var2}'
             #comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
              echo ${{ variables.one }} # outputs initialValue
             echo $(one)
