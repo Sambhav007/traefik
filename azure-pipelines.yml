@@ -56,15 +56,15 @@ stages:
             echo "$keyName"
             keyNameVal=${strarr[3]}
             keyNameVal = ${keyNameVal}
-            echo "$keyNameVal"  
+            #echo "$keyNameVal"  
             #Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
             namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             #echo "$Var1" 
             echo "$namespace"
             echo "##vso[task.setvariable variable=Foo]$(namespace)"
             #comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
-            echo ${{ variables.one }} # outputs initialValue
-            echo $(one)
+            echo ${{ variables.Foo }} # outputs initialValue
+            echo $(Foo)
     
             
             echo '$******************************'
