@@ -16,10 +16,11 @@ stages:
 - stage: Publish
   displayName: Publish of release pipeline
   jobs:
-  - job: PreReleasePrepForhospitalMicroservice
-    displayName: Pre Release Preparation (Bash build id and Publish for Release pipeline)
+  - job: PreReleasePrepForTraefikAndAPI
+    displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
     - task: Bash@3
+      displayName: Copy blob file using Azcopy
       inputs:
         targetType: 'inline'
         script: |
@@ -27,9 +28,10 @@ stages:
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-09T15:54:50Z&se=2021-02-09T23:54:50Z&spr=https&sv=2019-12-12&sr=b&sig=tXx%2FeVHWmQI3dOlCIyKcXbj6FYj%2BXdLJxcW71R%2BDFaQ%3D" "/home/vsts/work/1/s"
+                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-10T04:42:04Z&se=2021-02-10T12:42:04Z&spr=https&sv=2019-12-12&sr=b&sig=5lv4KlEsORE9h8Lky1rM9W9GZebegn%2BMO%2FXhjt7hsxY%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
     - task: Bash@3
+      displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
         targetType: 'inline'
         script: |
@@ -139,6 +141,7 @@ stages:
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
     - task: Kubernetes@1
+      displayName: Create namespace in kubernetes cluster
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'Traefikcluster'
@@ -150,9 +153,8 @@ stages:
     
     
     - task: KubernetesManifest@0
-      displayName: KubernetesManifestCreate Command
+      displayName: Create customer secret 
       inputs:
-        
         action: 'createSecret'
         kubernetesServiceConnection: 'Traefikcluster'
         namespace: $(comname)
