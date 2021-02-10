@@ -52,6 +52,10 @@ stages:
             echo "$Var2"
             comname = `echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             echo $(comname)
+    variables:
+            namespace: $Var2
+            varname: namespace
+            echo $(varname)
             echo '$******************************'
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
