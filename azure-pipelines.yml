@@ -9,7 +9,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 variables:
-  foo: data
+  foo: $namespace
 
 stages:
 - stage: Publish
@@ -86,7 +86,8 @@ stages:
             
             echo $(COMNAME)
             echo $(comname)
-  
+            echo $(foo)
+            
 
             
             echo '$******************************'
@@ -204,7 +205,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: $($(comname))
+        namespace: $(foo)
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
