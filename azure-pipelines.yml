@@ -88,9 +88,9 @@ stages:
             cat 'namespace.txt'
             #`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             foo: `cat 'namespace.txt'`
-            echo "$foo"
-            echo $(foo)
-            echo ${foo}
+            echo $(COMNAME)
+            echo $(comname)
+  
 
             
             echo '$******************************'
