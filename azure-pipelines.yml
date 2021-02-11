@@ -25,7 +25,15 @@ stages:
         Contents: 'teectl'
         TargetFolder: 'usr/local/bin'
         OverWrite: true
-
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo Write your commands here
+          
+          echo Hello world
+          cp /home/vsts/work/1/s/teectl /usr/local/bin
+          cd /usr/local/bin
+          teectl
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
@@ -200,6 +208,8 @@ stages:
         configuration: '/home/vsts/work/1/s/sqldeployment_build.yaml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
+    
+   
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: ''
