@@ -81,8 +81,12 @@ stages:
             #echo "$FOO"
             #FOO = 'kloss'
             #echo "$FOO"
-            echo "$namespace" > "$comname"
+            echo "$namespace" > 'namespace.txt' 
+            comname = `cat 'namespace.txt'`
             echo "$comname"
+            echo $(comname)
+            echo ${comname}
+
             
             echo '$******************************'
             cat 'namespace.yaml'
