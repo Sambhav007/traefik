@@ -81,7 +81,8 @@ stages:
             #echo "$FOO"
             #FOO = 'kloss'
             #echo "$FOO"
-            echo "$namespace" > 'namespace.txt'
+            echo "$namespace" > "$comname"
+            echo "$comname"
             
             echo '$******************************'
             cat 'namespace.yaml'
@@ -195,11 +196,10 @@ stages:
         containerRegistryType: 'Azure Container Registry'
     
     - task: KubernetesManifest@0
-            
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: value = `cat 'namespace.txt'`
+        namespace: 'kloss'
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
