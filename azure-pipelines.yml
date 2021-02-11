@@ -204,7 +204,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: '$(comname)'
+        namespace: ${comname}
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
