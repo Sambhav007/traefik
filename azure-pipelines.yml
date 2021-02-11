@@ -84,6 +84,7 @@ stages:
             echo '##vso[task.setvariable variable=Foo]$namespace'
             FOO = $namespace
             echo "$FOO"
+
             
             echo '$******************************'
             cat 'namespace.yaml'
