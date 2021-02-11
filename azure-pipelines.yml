@@ -83,11 +83,7 @@ stages:
             #echo "$FOO"
             #FOO = 'kloss'
             #echo "$FOO"
-            echo "$namespace" > 'namespace.txt'
-            echo "namespacevalbelow in file" 
-            cat 'namespace.txt'
-            #`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
-            foo: `cat 'namespace.txt'`
+            
             echo $(COMNAME)
             echo $(comname)
   
@@ -208,7 +204,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
+        namespace: $(COMNAME)
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
@@ -218,7 +214,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
+        namespace: $(COMNAME)
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=./settings/appsettings_customersecret.json'
