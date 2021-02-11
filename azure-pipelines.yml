@@ -31,7 +31,6 @@ stages:
           echo Write your commands here
           
           echo Hello world
-          cp /home/vsts/work/1/s/teectl /usr/local/bin
           cd /usr/local/bin
           teectl
     - task: Bash@3
