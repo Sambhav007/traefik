@@ -8,9 +8,7 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
-variables:
-  -name : foo
-  value : data
+
 
 stages:
 - stage: Publish
@@ -210,12 +208,10 @@ stages:
     
     - task: KubernetesManifest@0
       displayName: Create customer secret
-      env:
-        kk: kloss
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: $kk
+        namespace: 'kloss'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=./settings/appsettings_customersecret.json'
