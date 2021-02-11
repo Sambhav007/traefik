@@ -32,15 +32,16 @@ stages:
           # Write your PowerShell commands here.
           
           Write-Host "Hello World"
-          az login
-          az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-          az aks get-credentials --resource-group Demok8 --name testingcluster
+          #az login
+          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          #az aks get-credentials --resource-group Demok8 --name testingcluster
           # List all deployments in all namespaces
-          kubectl get deployments --all-namespaces=true
+          #kubectl get deployments --all-namespaces=true
           pwd
           wget -O teectl_v2.1.7_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.1.7/teectl_v2.1.7_linux_amd64.tar.gz
           tar -xzvf teectl_v2.1.7_linux_amd64.tar.gz
-          teectl
+          pwd
+          teectl version
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
