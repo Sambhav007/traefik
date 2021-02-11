@@ -20,7 +20,7 @@ stages:
     displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
     - bash: |
-        FOO= 'heloo'
+        FOO= "ValueData"
     - task: CopyFiles@2
       inputs:
         SourceFolder: '/home/vsts/work/1/s/'
