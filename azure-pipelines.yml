@@ -210,10 +210,12 @@ stages:
     
     - task: KubernetesManifest@0
       displayName: Create customer secret
+      env:
+        kk: kloss
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
+        namespace: $kk
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=./settings/appsettings_customersecret.json'
