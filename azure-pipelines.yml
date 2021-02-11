@@ -19,21 +19,15 @@ stages:
   - job: PreReleasePrepForTraefikAndAPI
     displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
+    - bash: |
+        FOO=""
     - task: CopyFiles@2
       inputs:
         SourceFolder: '/home/vsts/work/1/s/'
         Contents: 'teectl'
         TargetFolder: 'usr/local/bin'
         OverWrite: true
-    - task: AzureCLI@2
-      inputs:
-        scriptType: 'ps'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          wget -O teectl_v2.1.7_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.1.7/teectl_v2.1.7_linux_amd64.tar.gz
-                    tar -xzvf teectl_v2.1.7_linux_amd64.tar.gz
-                    pwd
-                    teectl version
+
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -49,8 +43,8 @@ stages:
           pwd
           wget -O teectl_v2.1.7_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.1.7/teectl_v2.1.7_linux_amd64.tar.gz
           tar -xzvf teectl_v2.1.7_linux_amd64.tar.gz
-          cp /home/vsts/work/1/s/teectl /usr/local/bin
-          cd /usr/local/bin
+          #cp /home/vsts/work/1/s/teectl /usr/local/bin
+          #cd /usr/local/bin
           pwd
           teectl version
     
@@ -88,7 +82,8 @@ stages:
             #echo "$Var1" 
             echo "$namespace"
             echo '##vso[task.setvariable variable=Foo]$namespace'
-            echo "$Foo"
+            FOO = $namespace
+            echo "$FOO"
             
             echo '$******************************'
             cat 'namespace.yaml'
