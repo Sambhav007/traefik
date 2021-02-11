@@ -85,20 +85,7 @@ stages:
             #FOO = 'kloss'
             #echo "$FOO"
             
-            echo '##vso[task.setvariable variable=foo]$(namespace)'
-           
-            echo ${{ variables.foo }} # outputs initialValue
-            echo $(foo) # outputs secondValue
-
-            echo '##vso[task.setvariable variable=foo]${namespace}'
-           
-            echo ${{ variables.foo }} # outputs initialValue
-            echo $(foo) # outputs secondValue
-
-            echo '##vso[task.setvariable variable=foo]"${namespace}"'
-           
-            echo ${{ variables.foo }} # outputs initialValue
-            echo $(foo) # outputs secondValue
+            
 
             
             echo '$******************************'
@@ -216,7 +203,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: $(foo)
+        namespace: 'kloss'
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
@@ -226,7 +213,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: $(COMNAME)
+        namespace: 'kloss'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=./settings/appsettings_customersecret.json'
