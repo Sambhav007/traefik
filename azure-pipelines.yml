@@ -8,6 +8,8 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
+variables:
+  foo: data
 
 stages:
 - stage: Publish
@@ -82,10 +84,11 @@ stages:
             #FOO = 'kloss'
             #echo "$FOO"
             echo "$namespace" > 'namespace.txt' 
-            comname = `cat 'namespace.txt'`
-            echo "$comname"
-            echo $(comname)
-            echo ${comname}
+            cat 'namespace.txt'
+            foo = `cat 'namespace.txt'`
+            echo "$foo"
+            echo $(foo)
+            echo ${foo}
 
             
             echo '$******************************'
