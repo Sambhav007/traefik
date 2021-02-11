@@ -37,6 +37,9 @@ stages:
           az aks get-credentials --resource-group Demok8 --name testingcluster
           # List all deployments in all namespaces
           kubectl get deployments --all-namespaces=true
+          pwd
+          Copy-Item "/home/vsts/work/1/s/teectl" -Destination "."
+          teectl
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
