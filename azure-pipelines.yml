@@ -85,12 +85,17 @@ stages:
             #FOO = 'kloss'
             #echo "$FOO"
             
-            echo '##vso[task.setvariable variable=foo]$namespace'
+            echo '##vso[task.setvariable variable=foo]$(namespace)'
            
             echo ${{ variables.foo }} # outputs initialValue
             echo $(foo) # outputs secondValue
 
-            echo '##vso[task.setvariable variable=foo]kloss'
+            echo '##vso[task.setvariable variable=foo]${namespace}'
+           
+            echo ${{ variables.foo }} # outputs initialValue
+            echo $(foo) # outputs secondValue
+
+            echo '##vso[task.setvariable variable=foo]"${namespace}"'
            
             echo ${{ variables.foo }} # outputs initialValue
             echo $(foo) # outputs secondValue
