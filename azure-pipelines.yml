@@ -9,9 +9,6 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  Foo : ''
-
 stages:
 - stage: Publish
   displayName: Publish of release pipeline
@@ -19,8 +16,6 @@ stages:
   - job: PreReleasePrepForTraefikAndAPI
     displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
-    - bash: |
-        FOO= "ValueData"
     - task: CopyFiles@2
       inputs:
         SourceFolder: '/home/vsts/work/1/s/'
@@ -81,11 +76,12 @@ stages:
             namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
             #echo "$Var1" 
             echo "$namespace"
-            echo '##vso[task.setvariable variable=Foo]$namespace'
-            FOO = ${namespace}
-            echo "$FOO"
-            FOO = 'kloss'
-            echo "$FOO"
+            #echo '##vso[task.setvariable variable=Foo]$namespace'
+            #FOO = ${namespace}
+            #echo "$FOO"
+            #FOO = 'kloss'
+            #echo "$FOO"
+            echo "$namespace" > 'namespace.txt'
             
             echo '$******************************'
             cat 'namespace.yaml'
@@ -199,10 +195,11 @@ stages:
         containerRegistryType: 'Azure Container Registry'
     
     - task: KubernetesManifest@0
+            
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
+        namespace: value = `cat 'namespace.txt'`
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
