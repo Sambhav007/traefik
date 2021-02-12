@@ -153,7 +153,7 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'testingcluster'
-        command: 'teectl'
+        command: 'apply'
         useConfigurationFile: true
         configuration: '/home/vsts/work/1/s/namespace_build.yaml'
         secretType: 'dockerRegistry'
