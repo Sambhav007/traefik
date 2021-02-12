@@ -59,7 +59,14 @@ stages:
             #kubectl get deployments --all-namespaces=true
             #./teectl setup --kubernetes
       
-    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n victoryautoworks --dry-run=client --output=yaml > mssqlsecrets.yaml
+          echo 'Hello world'
+          cat '/home/vsts/work/1/s/mssqlsecret.yaml'  
     - task: Bash@3
       displayName: Copy file from blob using Azcopy
       inputs:
@@ -82,14 +89,7 @@ stages:
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
     
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          echo 'Hello world'
-          cat '/home/vsts/work/1/s/mssqlsecret.yaml'  
+    
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
