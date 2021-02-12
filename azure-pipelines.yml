@@ -64,9 +64,9 @@ stages:
           #"/home/vsts/work/1/s/teectl version"
           #'/home/vsts/work/1/s/teectl version'
           ./teectl
-          './teectl version'
+          #'./teectl version'
           ./teectl version
-         
+          ./teectl setup --kubernetes
       
    
     - task: Bash@3
@@ -78,7 +78,7 @@ stages:
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                      #$(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-11T06:47:33Z&se=2021-02-11T14:47:33Z&spr=https&sv=2019-12-12&sr=b&sig=7DlrfGlAlYZaRCMYqz2bXORCj6UbHIH65MN5qTwEiwo%3D" "/home/vsts/work/1/s"
+                    $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-11T06:47:33Z&se=2021-02-11T14:47:33Z&spr=https&sv=2019-12-12&sr=b&sig=7DlrfGlAlYZaRCMYqz2bXORCj6UbHIH65MN5qTwEiwo%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
       
     - task: Bash@3
@@ -214,7 +214,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
+        namespace: 'bbb'
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
