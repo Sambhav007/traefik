@@ -42,7 +42,7 @@ stages:
           #cp /home/vsts/work/1/s/teectl /usr/local/bin
           #cd /usr/local/bin
           #pwd
-          #teectl version
+          teectl version
     
 
     - task: Bash@3
@@ -180,7 +180,7 @@ stages:
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'testingcluster'
-        command: 'apply'
+        command: 'teectl'
         useConfigurationFile: true
         configuration: '/home/vsts/work/1/s/namespace_build.yaml'
         secretType: 'dockerRegistry'
