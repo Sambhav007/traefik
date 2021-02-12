@@ -44,7 +44,7 @@ stages:
           #teectl version
     - task: AzureCLI@2
       inputs: 
-        azureSubscription: Microsoft Azure Enterprise(9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+        #azureSubscription: Microsoft Azure Enterprise(9f5e2100-3a33-4deb-aa07-ec5f521aebc3
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
