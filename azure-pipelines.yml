@@ -57,19 +57,9 @@ stages:
             #az aks get-credentials --resource-group Demok8 --name traefikcluster
             # List all deployments in all namespaces
             #kubectl get deployments --all-namespaces=true
-          ./teectl setup --kubernetes
+            #./teectl setup --kubernetes
       
-    - task: AzureCLI@2
-      inputs:
-        scriptType: 'ps'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          #az login -u "c2FtYmhhdi5zQGhjbC5jb20K" -p "U2hpdm5laGFAMjAxNQo="
-                      #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-                      #az aks get-credentials --resource-group Demok8 --name traefikcluster
-                      # List all deployments in all namespaces
-                      #kubectl get deployments --all-namespaces=true
-                    ./teectl setup --kubernetes
+    
     - task: Bash@3
       displayName: Copy file from blob using Azcopy
       inputs:
@@ -208,7 +198,7 @@ stages:
       displayName: Create namespace in kubernetes cluster
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'testingcluster'
+        kubernetesServiceEndpoint: 'Traefikcluster'
         command: 'apply'
         useConfigurationFile: true
         configuration: '/home/vsts/work/1/s/namespace_build.yaml'
@@ -220,11 +210,19 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
+        namespace: 'kloss --dry-run=client > mssqlsecret.yaml'
         secretType: 'generic'
         secretName: 'mssql'
-        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
+        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
     
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          echo 'Hello world'
+          cat '/home/vsts/work/1/s/mssqlsecret.yaml'
     - task: KubernetesManifest@0
       displayName: Create customer secret
       inputs:
