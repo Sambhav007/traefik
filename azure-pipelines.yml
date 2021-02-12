@@ -63,9 +63,11 @@ stages:
           echo 'teectl version command result'
           #"/home/vsts/work/1/s/teectl version"
           #'/home/vsts/work/1/s/teectl version'
-          ./teectl
+          #./teectl
+
           #'./teectl version'
           ./teectl version
+            az login -u 'sambhav.s@hcl.com' -p 'Shivneha@2015'
           ./teectl setup --kubernetes
       
    
