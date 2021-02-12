@@ -52,14 +52,24 @@ stages:
 
           #'./teectl version'
           ./teectl version
-            #az login -u "c2FtYmhhdi5zQGhjbC5jb20K" -p "U2hpdm5laGFAMjAxNQo="
+            #az login -u 'sambhav.s@hcl.com' -p "U2hpdm5laGFAMjAxNQo="
             #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
             #az aks get-credentials --resource-group Demok8 --name traefikcluster
             # List all deployments in all namespaces
             #kubectl get deployments --all-namespaces=true
           ./teectl setup --kubernetes
       
-   
+    - task: AzureCLI@2
+      inputs:
+        scriptType: 'ps'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          #az login -u "c2FtYmhhdi5zQGhjbC5jb20K" -p "U2hpdm5laGFAMjAxNQo="
+                      #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+                      #az aks get-credentials --resource-group Demok8 --name traefikcluster
+                      # List all deployments in all namespaces
+                      #kubectl get deployments --all-namespaces=true
+                    ./teectl setup --kubernetes
     - task: Bash@3
       displayName: Copy file from blob using Azcopy
       inputs:
@@ -210,7 +220,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'bbb'
+        namespace: 'kloss'
         secretType: 'generic'
         secretName: 'mssql'
         secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"' 
@@ -220,7 +230,7 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'abcd'
+        namespace: 'kloss'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=./settings/appsettings_customersecret.json'    
