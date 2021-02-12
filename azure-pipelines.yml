@@ -17,39 +17,7 @@ stages:
   - job: PreReleasePrepForTraefikAndAPI
     displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '/home/vsts/work/1/s/'
-        Contents: 'teectl'
-        TargetFolder: 'usr/local/bin'
-        OverWrite: true
-
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your PowerShell commands here.
-          
-          Write-Host "Hello World"
-          #az login
-          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-          #az aks get-credentials --resource-group Demok8 --name testingcluster
-          # List all deployments in all namespaces
-          #kubectl get deployments --all-namespaces=true
-          echo "pwd result"
-          pwd
-          #wget -O teectl_v2.1.7_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.1.7/teectl_v2.1.7_linux_amd64.tar.gz
-          #tar -xzvf teectl_v2.1.7_linux_amd64.tar.gz
-          #cp /home/vsts/work/1/s/teectl /usr/local/bin
-          #cd /usr/local/bin
-          #pwd
-          echo "teectl Result"
-          #dir
-          #/home/vsts/work/1/s/teectl
-          "/home/vsts/work/1/s/teectl version"
-          #teectl version
-    
-
+   
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
