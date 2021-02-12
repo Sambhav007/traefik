@@ -45,6 +45,7 @@ stages:
           #pwd
           echo "Now Directory Result"
           dir
+          /home/vsts/work/1/s/teectl
           #teectl version
     
 
