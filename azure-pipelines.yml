@@ -18,6 +18,48 @@ stages:
     displayName: Pre Release Preparation (Publish for Release pipeline)
     steps:
    
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your PowerShell commands here.
+          
+          Write-Host "Hello World"
+          #az login
+          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          #az aks get-credentials --resource-group Demok8 --name testingcluster
+          # List all deployments in all namespaces
+          #kubectl get deployments --all-namespaces=true
+          echo "pwd result"
+          pwd
+          wget -O teectl_v2.1.7_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.1.7/teectl_v2.1.7_linux_amd64.tar.gz
+          tar -xzvf teectl_v2.1.7_linux_amd64.tar.gz
+          #cp /home/vsts/work/1/s/teectl /usr/local/bin
+          #cd /usr/local/bin
+          #pwd
+          echo "teectl Result"
+          dir
+          #/home/vsts/work/1/s/teectl
+          #"/home/vsts/work/1/s/teectl version"
+          #teectl version
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          echo 'pwd Command Result'
+          pwd
+          echo 'ls Command Result'
+          ls -a
+          
+          echo 'Chmod command'
+          
+          chmod 777 teectl
+          
+          echo 'teectl version command result'
+          teectl version
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
@@ -27,7 +69,7 @@ stages:
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-11T06:47:33Z&se=2021-02-11T14:47:33Z&spr=https&sv=2019-12-12&sr=b&sig=7DlrfGlAlYZaRCMYqz2bXORCj6UbHIH65MN5qTwEiwo%3D" "/home/vsts/work/1/s"
+                      #$(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-11T06:47:33Z&se=2021-02-11T14:47:33Z&spr=https&sv=2019-12-12&sr=b&sig=7DlrfGlAlYZaRCMYqz2bXORCj6UbHIH65MN5qTwEiwo%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
       
     - task: Bash@3
