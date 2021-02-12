@@ -19,59 +19,44 @@ stages:
     steps:
    
     - task: PowerShell@2
+      displayName: Download teectl for linux
       inputs:
         targetType: 'inline'
         script: |
           # Write your PowerShell commands here.
-          
-          Write-Host "Hello World"
-          #az login
-          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-          #az aks get-credentials --resource-group Demok8 --name testingcluster
-          # List all deployments in all namespaces
-          #kubectl get deployments --all-namespaces=true
-          echo "pwd result"
-          pwd
           wget -O teectl_v2.1.7_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.1.7/teectl_v2.1.7_linux_amd64.tar.gz
           tar -xzvf teectl_v2.1.7_linux_amd64.tar.gz
-          #cp /home/vsts/work/1/s/teectl /usr/local/bin
-          #cd /usr/local/bin
-          #pwd
-          echo "dir commandd Result"
-          dir
-          #/home/vsts/work/1/s/teectl
-          #"/home/vsts/work/1/s/teectl version"
-          #teectl version
-   
+         
     - task: Bash@3
+      displayName: make excutable exe and run teectl version command
       inputs:
         targetType: 'inline'
         script: |
           # Write your commands here
           
-          echo 'pwd Command Result'
-          pwd
-          echo 'ls Command Result'
-          ls -l
+          #echo 'pwd Command Result'
+          #pwd
+          #echo 'ls Command Result'
+          #ls -l
           
-          echo 'Chmod command'
+          #echo 'Chmod command'
           
           #chmod 777 teectl
-
+          echo "chmod command use for exe excuatble"
           chmod u+x teectl
           
-          echo 'teectl version command result'
+          #echo 'teectl version command result'
           #"/home/vsts/work/1/s/teectl version"
           #'/home/vsts/work/1/s/teectl version'
           #./teectl
 
           #'./teectl version'
           ./teectl version
-            az login -u "c2FtYmhhdi5zQGhjbC5jb20K" -p "U2hpdm5laGFAMjAxNQo="
-            az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-            az aks get-credentials --resource-group Demok8 --name traefikcluster
+            #az login -u "c2FtYmhhdi5zQGhjbC5jb20K" -p "U2hpdm5laGFAMjAxNQo="
+            #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+            #az aks get-credentials --resource-group Demok8 --name traefikcluster
             # List all deployments in all namespaces
-            kubectl get deployments --all-namespaces=true
+            #kubectl get deployments --all-namespaces=true
           ./teectl setup --kubernetes
       
    
@@ -84,7 +69,7 @@ stages:
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                    $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-12T09:53:16Z&se=2021-02-12T17:53:16Z&spr=https&sv=2019-12-12&sr=b&sig=emQU2eULqReZiAIPuZ6DJ%2BDOP83Q7qHhNUUSJRN4%2BhQ%3D" "/home/vsts/work/1/s"
+                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-12T09:53:16Z&se=2021-02-12T17:53:16Z&spr=https&sv=2019-12-12&sr=b&sig=emQU2eULqReZiAIPuZ6DJ%2BDOP83Q7qHhNUUSJRN4%2BhQ%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
       
     - task: Bash@3
@@ -113,10 +98,7 @@ stages:
             #FOO = 'kloss'
             #echo "$FOO"
             
-            
-
-            
-            echo '$******************************'
+            echo "******************************"
             cat 'namespace.yaml'
             value=`cat 'namespace.yaml'`
             value=${value//##Namespace##/$namespace}
@@ -124,7 +106,7 @@ stages:
             value1=`cat 'namespace_build.yaml'`
             echo "$value1"
 
-            echo "$********************************"
+            echo "******************************"
             echo 'Hello world'           
             cat 'customermanagementapi-v1.yaml'
             echo 'Hello world 0'  
@@ -136,35 +118,40 @@ stages:
             value1=`cat 'customermanagementapi_build.yaml'`
             echo 'Hello world 2'  
             echo "$value1"
-            echo "$********************************"
+
+            echo "******************************"
             cat 'customertraefikroute.yaml'
             value=`cat 'customertraefikroute.yaml'`
             value=${value//##Namespace##/$namespace}
             echo "$value" > 'customertraefikroute_build.yaml'
             value1=`cat 'customertraefikroute_build.yaml'`
             echo "$value1"
-            echo "$********************************"
+
+            echo "******************************"
             cat 'PVC.yaml'
             value=`cat 'PVC.yaml'`
             value=${value//##Namespace##/$namespace}
             echo "$value" > 'PVC_build.yaml'
             value1=`cat 'PVC_build.yaml'`
             echo "$value1"
-            echo "$********************************"
+
+            echo "******************************"
             cat 'rabbitmq.yml'
             value=`cat 'rabbitmq.yml'`
             value=${value//##Namespace##/$namespace}
             echo "$value" > 'rabbitmq_build.yaml'
             value1=`cat 'rabbitmq_build.yaml'`
             echo "$value1"
-            echo "$********************************"
+
+            echo "******************************"
             cat 'rabbitsvc.yml'
             value=`cat 'rabbitsvc.yml'`
             value=${value//##Namespace##/$namespace}
             echo "$value" > 'rabbitsvc_build.yaml'
             value1=`cat 'rabbitsvc_build.yaml'`
             echo "$value1"
-            echo "$********************************"
+
+            echo "******************************"
             cat 'sqldeployment.yaml'
             value=`cat 'sqldeployment.yaml'`
             value=${value//##Namespace##/$namespace}
@@ -172,7 +159,7 @@ stages:
             value1=`cat 'sqldeployment_build.yaml'`
             echo "$value1"
 
-            echo "$********************************"
+            echo "******************************"
             cat 'customer-secret.yaml'
             value=`cat 'customer-secret.yaml'`
             value=${value//##Namespace##/$namespace}
@@ -180,7 +167,7 @@ stages:
             value1=`cat 'customer-secret_build.yaml'`
             echo "$value1"
 
-            echo "$********************************"
+            echo "******************************"
             cat 'topsecret.yaml'
             value=`cat 'topsecret.yaml'`
             value=${value//##Namespace##/$namespace}
@@ -188,7 +175,7 @@ stages:
             value1=`cat 'topsecret_build.yaml'`
             echo "$value1"
 
-            echo "$********************************"
+            echo "******************************"
             cat 'mssql-secret.yaml'
             value=`cat 'mssql-secret.yaml'`
             value=${value//##Namespace##/$namespace}
@@ -196,6 +183,7 @@ stages:
             value1=`cat 'mssql-secret_build.yaml'`
             echo "$value1"
 
+            echo "******************************"
             cat 'mssql-secret.yaml'
             value=`cat 'settings/appsettings_customersecret_gen.json'`
             value=${value//##Namespace##/$namespace}
@@ -204,6 +192,7 @@ stages:
             echo "$value1"
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
+            
         
     - task: Kubernetes@1
       displayName: Create namespace in kubernetes cluster
