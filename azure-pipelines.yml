@@ -37,7 +37,7 @@ stages:
           #cp /home/vsts/work/1/s/teectl /usr/local/bin
           #cd /usr/local/bin
           #pwd
-          echo "teectl Result"
+          echo "dir commandd Result"
           dir
           #/home/vsts/work/1/s/teectl
           #"/home/vsts/work/1/s/teectl version"
@@ -52,16 +52,19 @@ stages:
           echo 'pwd Command Result'
           pwd
           echo 'ls Command Result'
-          ls -a
+          ls -l
           
           echo 'Chmod command'
           
-          chmod 777 teectl
+          #chmod 777 teectl
 
-          chmod +x teectl
+          chmod u+x teectl
           
           echo 'teectl version command result'
           "/home/vsts/work/1/s/teectl version"
+          '/home/vsts/work/1/s/teectl version'
+          'teectl version'
+          -exec teectl
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
