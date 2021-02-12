@@ -42,7 +42,8 @@ stages:
           #cp /home/vsts/work/1/s/teectl /usr/local/bin
           #cd /usr/local/bin
           #pwd
-          teectl version
+          dir
+          #teectl version
     
 
     - task: Bash@3
