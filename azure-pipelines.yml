@@ -46,7 +46,7 @@ stages:
           echo "teectl Result"
           #dir
           #/home/vsts/work/1/s/teectl
-          /home/vsts/work/1/s/teectl version
+          "/home/vsts/work/1/s/teectl version"
           #teectl version
     
 
