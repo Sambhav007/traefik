@@ -68,6 +68,10 @@ stages:
           #'./teectl version'
           ./teectl version
             az login -u 'sambhav.s@hcl.com' -p 'Shivneha@2015'
+            az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+            az aks get-credentials --resource-group Demok8 --name traefikcluster
+            # List all deployments in all namespaces
+            kubectl get deployments --all-namespaces=true
           ./teectl setup --kubernetes
       
    
