@@ -71,7 +71,25 @@ stages:
                       tar -xf azcopy_v10.tar.gz --strip-components=1
                       $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-12T09:53:16Z&se=2021-02-12T17:53:16Z&spr=https&sv=2019-12-12&sr=b&sig=emQU2eULqReZiAIPuZ6DJ%2BDOP83Q7qHhNUUSJRN4%2BhQ%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
-      
+
+    - task: KubernetesManifest@0
+      displayName: Create mssql secret 
+      inputs:
+        action: 'createSecret'
+        kubernetesServiceConnection: 'Traefikcluster'
+        namespace: 'kloss --dry-run=client > mssqlsecret.yaml'
+        secretType: 'generic'
+        secretName: 'mssql'
+        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          echo 'Hello world'
+          cat '/home/vsts/work/1/s/mssqlsecret.yaml'  
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
@@ -205,24 +223,7 @@ stages:
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
     
-    - task: KubernetesManifest@0
-      displayName: Create mssql secret 
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: 'Traefikcluster'
-        namespace: 'kloss --dry-run=client > mssqlsecret.yaml'
-        secretType: 'generic'
-        secretName: 'mssql'
-        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
     
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          echo 'Hello world'
-          cat '/home/vsts/work/1/s/mssqlsecret.yaml'
     - task: KubernetesManifest@0
       displayName: Create customer secret
       inputs:
