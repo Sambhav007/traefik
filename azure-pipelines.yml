@@ -61,10 +61,11 @@ stages:
           chmod u+x teectl
           
           echo 'teectl version command result'
-          "/home/vsts/work/1/s/teectl version"
-          '/home/vsts/work/1/s/teectl version'
+          #"/home/vsts/work/1/s/teectl version"
+          #'/home/vsts/work/1/s/teectl version'
           ./teectl
-          'teectl version'
+          './teectl version'
+          ./teectl version
          
       
    
