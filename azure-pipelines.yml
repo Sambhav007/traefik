@@ -61,7 +61,7 @@ stages:
       
    
     - task: Bash@3
-      displayName: Copy blob file using Azcopy
+      displayName: Copy file from blob using Azcopy
       inputs:
         targetType: 'inline'
         script: |
@@ -192,7 +192,7 @@ stages:
             echo "$value1"
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
-            
+
         
     - task: Kubernetes@1
       displayName: Create namespace in kubernetes cluster
@@ -206,6 +206,7 @@ stages:
         containerRegistryType: 'Azure Container Registry'
     
     - task: KubernetesManifest@0
+      displayName: Create mssql secret 
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
@@ -224,6 +225,7 @@ stages:
         secretName: 'settingscustomerapi-appsettings'
         secretArguments: '--from-file=./settings/appsettings_customersecret.json'    
     - task: Kubernetes@1
+      displayName: deploy pvc in kubernetes
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'testingcluster'
@@ -236,6 +238,7 @@ stages:
 
 
     - task: Kubernetes@1
+      displayName: deploy mssql in kubernetes
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'testingcluster'
