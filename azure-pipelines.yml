@@ -43,9 +43,10 @@ stages:
           #cp /home/vsts/work/1/s/teectl /usr/local/bin
           #cd /usr/local/bin
           #pwd
-          echo "Now Directory Result"
-          dir
-          /home/vsts/work/1/s/teectl
+          echo "teectl Result"
+          #dir
+          #/home/vsts/work/1/s/teectl
+          /home/vsts/work/1/s/teectl version
           #teectl version
     
 
