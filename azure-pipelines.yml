@@ -212,15 +212,8 @@ stages:
         namespace: 'kloss' 
         secretType: 'generic'
         secretName: 'mssql'
-        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" --dry-run=client > mssqlsecret.yaml'
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          echo 'Hello world'
-          cat '/home/vsts/work/1/s/mssqlsecret.yaml'
+        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
+    
     - task: KubernetesManifest@0
       displayName: Create customer secret
       inputs:
