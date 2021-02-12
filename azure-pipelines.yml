@@ -57,9 +57,11 @@ stages:
           echo 'Chmod command'
           
           chmod 777 teectl
+
+          chmod +x teectl
           
           echo 'teectl version command result'
-          teectl version
+          "/home/vsts/work/1/s/teectl version"
     - task: Bash@3
       displayName: Copy blob file using Azcopy
       inputs:
