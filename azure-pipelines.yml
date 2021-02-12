@@ -209,7 +209,7 @@ stages:
       displayName: Create mssql secret 
       inputs:
         action: 'createSecret'
-        kubernetesServiceConnection: 'testingcluster'
+        kubernetesServiceConnection: 'Traefikcluster'
         namespace: 'kloss --dry-run=client > mssqlsecret.yaml'
         secretType: 'generic'
         secretName: 'mssql'
