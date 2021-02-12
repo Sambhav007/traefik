@@ -186,17 +186,6 @@ stages:
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
     
-    
-    - task: Kubernetes@1
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'testingcluster'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: '/home/vsts/work/1/s/PVC_build.yaml'
-        secretType: 'dockerRegistry'
-        containerRegistryType: 'Azure Container Registry'
-    
     - task: KubernetesManifest@0
       inputs:
         action: 'createSecret'
@@ -211,10 +200,21 @@ stages:
       inputs:
         action: 'createSecret'
         kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
+        namespace: 'abcd'
         secretType: 'generic'
         secretName: 'settingscustomerapi-appsettings'
-        secretArguments: '--from-file=./settings/appsettings_customersecret.json'
+        secretArguments: '--from-file=./settings/appsettings_customersecret.json'    
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'testingcluster'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '/home/vsts/work/1/s/PVC_build.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+    
+
 
     - task: Kubernetes@1
       inputs:
