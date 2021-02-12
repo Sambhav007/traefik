@@ -63,6 +63,7 @@ stages:
           echo 'teectl version command result'
           "/home/vsts/work/1/s/teectl version"
           '/home/vsts/work/1/s/teectl version'
+          ./teectl
           'teectl version'
          
       
