@@ -209,74 +209,15 @@ stages:
             namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
           echo 'Hello world'
           az login -u 'sambhav.s@hcl.com' -p 'Shivneha@2015'
-          az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-          az aks get-credentials --resource-group Demok8 --name traefikcluster
+          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          #az aks get-credentials --resource-group Demok8 --name traefikcluster
             # List all deployments in all namespaces
+          az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          az aks get-credentials --resource-group Demok8 --name testingcluster
           kubectl get deployments --all-namespaces=true
           kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n $namespace --dry-run=client --output=yaml > mssqlsecrets_build.yaml
           kubectl create secret generic settingscustomerapi-appsettings --from-file=./settings/appsettings_customersecret.json -n $namespace --dry-run=client --output=yaml > customersecret_build.yaml 
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: ''
-        artifact: 'traefikdata'
-        publishLocation: 'pipeline'
-        
-    - task: Kubernetes@1
-      displayName: Create namespace in kubernetes cluster
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'testingcluster'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: '/home/vsts/work/1/s/namespace_build.yaml'
-        secretType: 'dockerRegistry'
-        containerRegistryType: 'Azure Container Registry'
-    
-    - task: KubernetesManifest@0
-      displayName: Create mssql secret 
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: 'Traefikcluster'
-        namespace: 'kloss' 
-        secretType: 'generic'
-        secretName: 'mssql'
-        secretArguments: '--from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd"'
-    
-    - task: KubernetesManifest@0
-      displayName: Create customer secret
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: 'testingcluster'
-        namespace: 'kloss'
-        secretType: 'generic'
-        secretName: 'settingscustomerapi-appsettings'
-        secretArguments: '--from-file=./settings/appsettings_customersecret.json'    
-    - task: Kubernetes@1
-      displayName: deploy pvc in kubernetes
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'testingcluster'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: '/home/vsts/work/1/s/PVC_build.yaml'
-        secretType: 'dockerRegistry'
-        containerRegistryType: 'Azure Container Registry'
-    
-
-
-    - task: Kubernetes@1
-      displayName: deploy mssql in kubernetes
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'testingcluster'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: '/home/vsts/work/1/s/sqldeployment_build.yaml'
-        secretType: 'dockerRegistry'
-        containerRegistryType: 'Azure Container Registry'
-    
-   
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: ''
