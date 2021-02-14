@@ -58,7 +58,16 @@ stages:
             # List all deployments in all namespaces
             #kubectl get deployments --all-namespaces=true
             #./teectl setup --kubernetes
-      
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          echo 'Hello world'
+          az aks get-credentials -g Demok8 -n traefikcluster
+          # List all deployments in all namespaces
+          kubectl get deployments --all-namespaces=true
     - task: Bash@3
       displayName: Copy file from blob using Azcopy
       inputs:
