@@ -58,16 +58,7 @@ stages:
             # List all deployments in all namespaces
             #kubectl get deployments --all-namespaces=true
             #./teectl setup --kubernetes
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          echo 'Hello world'
-          az aks get-credentials -g Demok8 -n traefikcluster
-          # List all deployments in all namespaces
-          kubectl get deployments --all-namespaces=true
+   
     - task: Bash@3
       displayName: Copy file from blob using Azcopy
       inputs:
@@ -86,7 +77,6 @@ stages:
         targetType: 'inline'
         script: |
           # Write your commands here
-            comname:'caddy'
             IFS=',{}:".//'
             extfile=`cat '/home/vsts/work/1/s/file'`
             echo "$extfile"
@@ -201,12 +191,42 @@ stages:
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
 
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          IFS=',{}:".//'
+            extfile=`cat '/home/vsts/work/1/s/file'`
+            echo "$extfile"
+            read -a strarr <<<"$extfile"
+            keyName=${strarr[1]}
+            echo "$keyName"
+            keyNameVal=${strarr[3]}
+            keyNameVal = ${keyNameVal}
+            #echo "$keyNameVal"  
+            #Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
+            namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
+          echo 'Hello world'
+          az login -u 'sambhav.s@hcl.com' -p 'Shivneha@2015'
+          az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          az aks get-credentials --resource-group Demok8 --name traefikcluster
+            # List all deployments in all namespaces
+          kubectl get deployments --all-namespaces=true
+          kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n $namespace --dry-run=client --output=yaml > mssqlsecrets_build.yaml
+          kubectl create secret generic settingscustomerapi-appsettings --from-file=./settings/appsettings_customersecret.json -n $namespace --dry-run=client --output=yaml > customersecret_build.yaml 
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: ''
+        artifact: 'traefikdata'
+        publishLocation: 'pipeline'
         
     - task: Kubernetes@1
       displayName: Create namespace in kubernetes cluster
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'Traefikcluster'
+        kubernetesServiceEndpoint: 'testingcluster'
         command: 'apply'
         useConfigurationFile: true
         configuration: '/home/vsts/work/1/s/namespace_build.yaml'
