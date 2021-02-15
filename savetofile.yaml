@@ -1,0 +1,1081 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: ingressroutes.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: IngressRoute
+    plural: ingressroutes
+    singular: ingressroute
+  scope: Namespaced
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: middlewares.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: Middleware
+    plural: middlewares
+    singular: middleware
+  scope: Namespaced
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: ingressroutetcps.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: IngressRouteTCP
+    plural: ingressroutetcps
+    singular: ingressroutetcp
+  scope: Namespaced
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: ingressrouteudps.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: IngressRouteUDP
+    plural: ingressrouteudps
+    singular: ingressrouteudp
+  scope: Namespaced
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: tlsoptions.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: TLSOption
+    plural: tlsoptions
+    singular: tlsoption
+  scope: Namespaced
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: tlsstores.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: TLSStore
+    plural: tlsstores
+    singular: tlsstore
+  scope: Namespaced
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: traefikservices.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: TraefikService
+    plural: traefikservices
+    singular: traefikservice
+  scope: Namespaced
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: serverstransports.traefik.containo.us
+
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: ServersTransport
+    plural: serverstransports
+    singular: serverstransport
+  scope: Namespaced
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefikee
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "default-svc-acc"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: "default-svc-acc-role"
+  labels:
+    app: traefikee
+    release: "default"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - pods
+      - pods/log
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - create
+      - update
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "networking.k8s.io"
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - traefik.containo.us
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - tlsstores
+      - tlsoptions
+      - middlewares
+      - traefikservices
+      - serverstransports
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - access.smi-spec.io
+      - specs.smi-spec.io
+      - split.smi-spec.io
+    resources:
+      - traffictargets
+      - tcproutes
+      - httproutegroups
+      - trafficsplits
+    verbs:
+      - get
+      - list
+      - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: "default-svc-acc"
+  labels:
+    app: traefikee
+    release: "default"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: "default-svc-acc-role"
+subjects:
+  - kind: ServiceAccount
+    name: "default-svc-acc"
+    namespace: traefikee
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "default-svc-acc-role-traefikee"
+  namespace: traefikee
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "default-svc-acc-traefikee"
+  namespace: traefikee
+roleRef:
+  kind: Role
+  name: "default-svc-acc-role-traefikee"
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: "default-svc-acc"
+    namespace: traefikee
+
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: "default-mtls"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+data:
+  bundle.zip: "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"
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: "default-license"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+data:
+  license: "MDY0YmNkNWMtMjdkMC00YThlLTllYTktODZmYmQxZDBhNmY2"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "default-ctrl-svc"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  selector:
+    app: traefikee
+    release: "default"
+    component: controllers
+  clusterIP: None
+  publishNotReadyAddresses: true
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "default-controller"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  selector:
+    matchLabels:
+      app: traefikee
+      release: "default"
+      component: controllers
+  podManagementPolicy: Parallel
+  serviceName: "default-ctrl-svc"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: traefikee
+        release: "default"
+        component: controllers
+    spec:
+      serviceAccountName: "default-svc-acc"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: component
+                      operator: In
+                      values:
+                        - controllers
+                topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 30
+      initContainers:
+        - name: wait-dns
+          image: busybox:1.31.1
+          command: ['sh', '-c', 'until nslookup -type=a default-ctrl-svc.traefikee.svc.cluster.local; do echo waiting for published dns records; sleep 1; done;']
+          resources:
+            requests:
+              memory: "10Mi"
+              cpu: "100m"
+            limits:
+              memory: "100Mi"
+              cpu: "1000m"
+      containers:
+        - name: "default-controller"
+          image: traefik/traefikee:v2.4.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LICENSE
+              valueFrom:
+                secretKeyRef:
+                  name: "default-license"
+                  key: license
+          securityContext:
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+          ports:
+            - containerPort: 4242
+              name: control-port
+            - containerPort: 8080
+              name: api
+          readinessProbe:
+            tcpSocket:
+              port: control-port
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "4Gi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: mtls
+              mountPath: /var/run/mtls
+            - name: data
+              mountPath: /var/lib/traefikee
+            - name: sockets
+              mountPath: /var/run/traefikee
+          command:
+            - "/traefikee"
+            - "controller"
+            - "--name=$(POD_NAME)"
+            - "--advertise=$(POD_NAME).default-ctrl-svc.$(POD_NAMESPACE):4242"
+            - "--discovery.dns.bootstrapexpected=1"
+            - "--discovery.dns.domain=default-ctrl-svc.$(POD_NAMESPACE)"
+            - "--jointoken.kubernetes.prefix=default"
+            - "--jointoken.kubernetes.namespace=traefikee"
+            - "--license=$(LICENSE)"
+            - "--log.level="
+            - "--log.filepath="
+            - "--log.format="
+            - "--api.bundle=/var/run/mtls/bundle.zip"
+            - "--plugin.url=https://default-plugin-registry-svc.traefikee.svc.cluster.local"
+            - "--plugin.token=NTy3Ii9Ht2zA/Q=="
+      volumes:
+        - name: mtls
+          secret:
+            secretName: "default-mtls"
+        - name: sockets
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "default-plugin-registry-svc"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  type: ClusterIP
+  ports:
+    - name: https
+      port: 443
+      targetPort: https
+  selector:
+    app: traefikee
+    release: "default"
+    component: registry
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "default-plugin-registry"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  serviceName: "default-plugin-registry-svc"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefikee
+      release: "default"
+      component: registry
+  template:
+    metadata:
+      labels:
+        app: traefikee
+        release: "default"
+        component: registry
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: component
+                      operator: In
+                      values:
+                        - registry
+                topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      initContainers:
+        - name: wait-dns
+          image: busybox:1.31.1
+          command: ['sh', '-c', 'until nslookup -type=a default-ctrl-svc.traefikee.svc.cluster.local; do echo waiting for published dns records; sleep 1; done;']
+          resources:
+            requests:
+              memory: "10Mi"
+              cpu: "100m"
+            limits:
+              memory: "100Mi"
+              cpu: "1000m"
+      containers:
+        - name: "default-plugin-registry"
+          image: traefik/traefikee:v2.4.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          securityContext:
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          # readinessProbe:
+          #   tcpSocket:
+          #     port: http
+          #   initialDelaySeconds: 2
+          #   periodSeconds: 5
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "4Gi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: "default-plugin-registry-data"
+              mountPath: "/var/lib/traefikee"
+            - name: plugin-data
+              mountPath: "/var/lib/plugins"
+            - name: "join-token"
+              mountPath: "/var/run/secrets"
+          command:
+            - "/traefikee"
+            - "plugin-registry"
+            - "--name=$(POD_NAME)"
+            - "--plugindir=/var/lib/plugins"
+            - "--token=NTy3Ii9Ht2zA/Q=="
+            - "--discovery.dns.domain=default-ctrl-svc.$(POD_NAMESPACE)"
+            - "--jointoken.file.path=/var/run/secrets"
+            - "--log.level="
+            - "--log.filepath="
+            - "--log.format="
+      volumes:
+        - name: "default-plugin-registry-data"
+          emptyDir: {}
+        - name: "join-token"
+          secret:
+            secretName: "default-tokens"
+  volumeClaimTemplates:
+    - metadata:
+        name: plugin-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "default-proxy-svc"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+  selector:
+    app: traefikee
+    release: "default"
+    component: proxies
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "default-proxy"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefikee
+      release: "default"
+      component: proxies
+  template:
+    metadata:
+      labels:
+        app: traefikee
+        release: "default"
+        component: proxies
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: component
+                      operator: In
+                      values:
+                        - proxies
+                topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      initContainers:
+        - name: wait-dns
+          image: busybox:1.31.1
+          command: ['sh', '-c', 'until nslookup -type=a default-ctrl-svc.traefikee.svc.cluster.local; do echo waiting for published dns records; sleep 1; done;']
+          resources:
+            requests:
+              memory: "10Mi"
+              cpu: "100m"
+            limits:
+              memory: "100Mi"
+              cpu: "1000m"
+      containers:
+        - name: "default-proxy"
+          image: traefik/traefikee:v2.4.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          securityContext:
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+          ports:
+            - containerPort: 8484
+              name: distributed
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          # readinessProbe:
+          #   tcpSocket:
+          #     port: http
+          #   initialDelaySeconds: 2
+          #   periodSeconds: 5
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "4Gi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: "default-proxy-data"
+              mountPath: "/var/lib/traefikee"
+            - name: "join-token"
+              mountPath: "/var/run/secrets"
+          command:
+            - "/traefikee"
+            - "proxy"
+            - "--role=ingress"
+            - "--name=$(POD_NAME)"
+            - "--discovery.dns.domain=default-ctrl-svc.$(POD_NAMESPACE)"
+            - "--jointoken.file.path=/var/run/secrets"
+            - "--log.level="
+            - "--log.filepath="
+            - "--log.format="
+      volumes:
+        - name: "default-proxy-data"
+          emptyDir: {}
+        - name: "join-token"
+          secret:
+            secretName: "default-tokens"
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: "default-mesh-proxy"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  selector:
+    matchLabels:
+      app: traefikee
+      component: maesh-mesh
+      release: "default"
+  template:
+    metadata:
+      labels:
+        app: traefikee
+        component: maesh-mesh
+        release: "default"
+    spec:
+      serviceAccountName: "default-mesh-proxy"
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: maesh-mesh
+          image: traefik/traefikee:v2.4.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - name: readiness
+              containerPort: 1081
+          resources:
+            requests:
+              memory: "10Mi"
+              cpu: "100m"
+            limits:
+              memory: "100Mi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: "default-proxy-data"
+              mountPath: "/var/lib/traefikee"
+            - name: "join-token"
+              mountPath: "/var/run/secrets"
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 1081
+            initialDelaySeconds: 3
+            periodSeconds: 1
+          command:
+            - "/traefikee"
+            - "proxy"
+            - "--role=mesh"
+            - "--name=$(POD_NAME)"
+            - "--discovery.dns.domain=default-ctrl-svc.$(POD_NAMESPACE)"
+            - "--jointoken.file.path=/var/run/secrets"
+            - "--log.level="
+            - "--log.filepath="
+            - "--log.format="
+      volumes:
+        - name: "default-proxy-data"
+          emptyDir: {}
+        - name: "join-token"
+          secret:
+            secretName: "default-tokens"
+
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: "default-mesh-proxy"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: traefikee
+      component: maesh-mesh
+      release: "default"
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "default-mesh-proxy"
+  namespace: traefikee
+  labels:
+    app: traefikee
+    release: "default"
+automountServiceAccountToken: false
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: traffictargets.access.smi-spec.io
+spec:
+  group: access.smi-spec.io
+  scope: Namespaced
+  names:
+    kind: TrafficTarget
+    shortNames:
+      - tt
+    plural: traffictargets
+    singular: traffictarget
+  version: v1alpha2
+  versions:
+    - name: v1alpha2
+      served: true
+      storage: true
+    - name: v1alpha1
+      served: false
+      storage: false
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          required:
+            - destination
+          properties:
+            destination:
+              description: The destination of this traffic target.
+              type: object
+              required:
+                - name
+                - kind
+              properties:
+                kind:
+                  description: Kind of the destination.
+                  type: string
+                name:
+                  description: Name of the destination.
+                  type: string
+                namespace:
+                  description: Namespace of the destination.
+                  type: string
+                port:
+                  description: Port number of the destination.
+                  type: number
+            rules:
+              description: Specifications of this traffic target.
+              type: array
+              items:
+                type: object
+                required:
+                  - name
+                  - kind
+                properties:
+                  kind:
+                    description: Kind of this spec.
+                    type: string
+                    enum:
+                      - HTTPRouteGroup
+                      - TCPRoute
+                  name:
+                    description: Name of this spec.
+                    type: string
+                  matches:
+                    description: Match conditions of this spec.
+                    type: array
+                    items:
+                      type: string
+            sources:
+              description: Sources of this traffic target.
+              type: array
+              items:
+                type: object
+                required:
+                  - name
+                  - kind
+                properties:
+                  kind:
+                    description: Kind of this source.
+                    type: string
+                  name:
+                    description: Name of this source.
+                    type: string
+                  namespace:
+                    description: Namespace of this source.
+                    type: string
+
+---
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: httproutegroups.specs.smi-spec.io
+spec:
+  group: specs.smi-spec.io
+  scope: Namespaced
+  names:
+    kind: HTTPRouteGroup
+    shortNames:
+      - htr
+    plural: httproutegroups
+    singular: httproutegroup
+  version: v1alpha3
+  versions:
+    - name: v1alpha3
+      served: true
+      storage: true
+    - name: v1alpha2
+      served: false
+      storage: false
+    - name: v1alpha1
+      served: false
+      storage: false
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          required:
+            - matches
+          properties:
+            matches:
+              description: Match conditions of this route group.
+              type: array
+              items:
+                type: object
+                required:
+                  - name
+                properties:
+                  name:
+                    description: Name of the HTTP route.
+                    type: string
+                  pathRegex:
+                    description: URI path regex of the HTTP route.
+                    type: string
+                  methods:
+                    description: The HTTP methods of this HTTP route.
+                    type: array
+                    items:
+                      type: string
+                      description: The HTTP method of this HTTP route.
+                      enum:
+                        - '*'
+                        - GET
+                        - HEAD
+                        - PUT
+                        - POST
+                        - DELETE
+                        - CONNECT
+                        - OPTIONS
+                        - TRACE
+                        - PATCH
+                  headers:
+                    description: Header match conditions of this route.
+                    type: array
+                    items:
+                      description: Header match condition of this route.
+                      type: object
+                      additionalProperties:
+                        type: string
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: tcproutes.specs.smi-spec.io
+spec:
+  group: specs.smi-spec.io
+  scope: Namespaced
+  names:
+    kind: TCPRoute
+    shortNames:
+      - tr
+    plural: tcproutes
+    singular: tcproute
+  version: v1alpha3
+  versions:
+    - name: v1alpha3
+      served: true
+      storage: true
+    - name: v1alpha2
+      served: false
+      storage: false
+    - name: v1alpha1
+      served: false
+      storage: false
+
+---
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: trafficsplits.split.smi-spec.io
+spec:
+  group: split.smi-spec.io
+  scope: Namespaced
+  names:
+    kind: TrafficSplit
+    listKind: TrafficSplitList
+    shortNames:
+      - ts
+    plural: trafficsplits
+    singular: trafficsplit
+  version: v1alpha3
+  versions:
+    - name: v1alpha3
+      served: true
+      storage: true
+    - name: v1alpha2
+      served: false
+      storage: false
+    - name: v1alpha1
+      served: false
+      storage: false
+  additionalPrinterColumns:
+    - name: Service
+      type: string
+      description: The apex service of this split.
+      JSONPath: .spec.service
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          type: object
+          required:
+            - service
+            - backends
+          properties:
+            service:
+              description: The apex service of this split.
+              type: string
+            matches:
+              description: The HTTP route groups that this traffic split should match.
+              type: array
+              items:
+                type: object
+                required: ['kind', 'name']
+                properties:
+                  kind:
+                    description: Kind of the matching group.
+                    type: string
+                    enum:
+                      - HTTPRouteGroup
+                  name:
+                    description: Name of the matching group.
+                    type: string
+            backends:
+              description: The backend services of this split.
+              type: array
+              items:
+                type: object
+                required: ['service', 'weight']
+                properties:
+                  service:
+                    description: Name of the Kubernetes service.
+                    type: string
+                  weight:
+                    description: Traffic weight value of this backend.
+                    type: number
