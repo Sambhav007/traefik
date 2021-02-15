@@ -1,0 +1,225 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+
+stages:
+- stage: Publish
+  displayName: Publish of release pipeline
+  jobs:
+  - job: PreReleasePrepForTraefikAndAPI
+    displayName: Pre Release Preparation (Publish for Release pipeline)
+    steps:
+   
+    - task: PowerShell@2
+      displayName: Download teectl for linux
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your PowerShell commands here.
+          wget -O teectl_v2.1.7_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.1.7/teectl_v2.1.7_linux_amd64.tar.gz
+          tar -xzvf teectl_v2.1.7_linux_amd64.tar.gz
+         
+    - task: Bash@3
+      displayName: make excutable exe and run teectl version command
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          #echo 'pwd Command Result'
+          #pwd
+          #echo 'ls Command Result'
+          #ls -l
+          
+          #echo 'Chmod command'
+          
+          #chmod 777 teectl
+          echo "chmod command use for exe excuatble"
+          chmod u+x teectl
+          
+          #echo 'teectl version command result'
+          #"/home/vsts/work/1/s/teectl version"
+          #'/home/vsts/work/1/s/teectl version'
+          #./teectl
+
+          #'./teectl version'
+          ./teectl version
+            #az login -u 'sambhav.s@hcl.com' -p "U2hpdm5laGFAMjAxNQo="
+            #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+            #az aks get-credentials --resource-group Demok8 --name traefikcluster
+            # List all deployments in all namespaces
+            #kubectl get deployments --all-namespaces=true
+            #./teectl setup --kubernetes
+   
+    - task: Bash@3
+      displayName: Copy file from blob using Azcopy
+      inputs:
+        targetType: 'inline'
+        script: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+                      mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
+                      wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
+                      tar -xf azcopy_v10.tar.gz --strip-components=1
+                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-14T07:34:18Z&se=2021-02-14T15:34:18Z&spr=https&sv=2019-12-12&sr=b&sig=ijwEtmjo6bYNUC23I4xvGZkdBf4qCjhpndPXa92dfvU%3D" "/home/vsts/work/1/s"
+                      echo $(Agent.ToolsDirectory)
+
+    - task: Bash@3
+      displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+            IFS=',{}:".//'
+            extfile=`cat '/home/vsts/work/1/s/file'`
+            echo "$extfile"
+            read -a strarr <<<"$extfile"
+            keyName=${strarr[1]}
+            echo "$keyName"
+            keyNameVal=${strarr[3]}
+            keyNameVal = ${keyNameVal}
+            #echo "$keyNameVal"  
+            #Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
+            namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
+            #echo "$Var1" 
+            echo "$namespace"
+            #echo '##vso[task.setvariable variable=Foo]$namespace'
+            #FOO = ${namespace}
+            #echo "$FOO"
+            #FOO = 'kloss'
+            #echo "$FOO"
+            
+            echo "******************************"
+            cat 'namespace.yaml'
+            value=`cat 'namespace.yaml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'namespace_build.yaml'
+            value1=`cat 'namespace_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            echo 'Hello world'           
+            cat 'customermanagementapi-v1.yaml'
+            echo 'Hello world 0'  
+            value=`cat 'customermanagementapi-v1.yaml'`
+            echo 'Hello world 0.25'  
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'customermanagementapi_build.yaml'
+            echo 'Hello world 1'  
+            value1=`cat 'customermanagementapi_build.yaml'`
+            echo 'Hello world 2'  
+            echo "$value1"
+
+            echo "******************************"
+            cat 'customertraefikroute.yaml'
+            value=`cat 'customertraefikroute.yaml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'customertraefikroute_build.yaml'
+            value1=`cat 'customertraefikroute_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'PVC.yaml'
+            value=`cat 'PVC.yaml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'PVC_build.yaml'
+            value1=`cat 'PVC_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'rabbitmq.yml'
+            value=`cat 'rabbitmq.yml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'rabbitmq_build.yaml'
+            value1=`cat 'rabbitmq_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'rabbitsvc.yml'
+            value=`cat 'rabbitsvc.yml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'rabbitsvc_build.yaml'
+            value1=`cat 'rabbitsvc_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'sqldeployment.yaml'
+            value=`cat 'sqldeployment.yaml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'sqldeployment_build.yaml'
+            value1=`cat 'sqldeployment_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'customer-secret.yaml'
+            value=`cat 'customer-secret.yaml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'customer-secret_build.yaml'
+            value1=`cat 'customer-secret_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'topsecret.yaml'
+            value=`cat 'topsecret.yaml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'topsecret_build.yaml'
+            value1=`cat 'topsecret_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'mssql-secret.yaml'
+            value=`cat 'mssql-secret.yaml'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'mssql-secret_build.yaml'
+            value1=`cat 'mssql-secret_build.yaml'`
+            echo "$value1"
+
+            echo "******************************"
+            cat 'mssql-secret.yaml'
+            value=`cat 'settings/appsettings_customersecret_gen.json'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'settings/appsettings_customersecret.json'
+            value1=`cat 'settings/appsettings_customersecret.json'`
+            echo "$value1"
+            mkdir 'traefikdata'  
+            echo 'after creation of traefik'  
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          IFS=',{}:".//'
+            extfile=`cat '/home/vsts/work/1/s/file'`
+            echo "$extfile"
+            read -a strarr <<<"$extfile"
+            keyName=${strarr[1]}
+            echo "$keyName"
+            keyNameVal=${strarr[3]}
+            keyNameVal = ${keyNameVal}
+            #echo "$keyNameVal"  
+            #Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
+            namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
+          echo 'Hello world'
+          az login -u 'sambhav.s@hcl.com' -p 'Shivneha@2015'
+          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          #az aks get-credentials --resource-group Demok8 --name traefikcluster
+            # List all deployments in all namespaces
+          az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          az aks get-credentials --resource-group Demok8 --name testingcluster
+          kubectl get deployments --all-namespaces=true
+          kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n $namespace --dry-run=client --output=yaml > mssqlsecrets_build.yaml
+          kubectl create secret generic settingscustomerapi-appsettings --from-file=./settings/appsettings_customersecret.json -n $namespace --dry-run=client --output=yaml > customersecret_build.yaml 
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: ''
+        artifact: 'traefikdata'
+        publishLocation: 'pipeline'
