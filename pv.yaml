@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: azure-disk-pv
+spec:
+  capacity:
+    storage: 2Gi
+  storageClassName: "default"
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  azureDisk:
+    kind: Managed
+    diskName: traefik
+    diskURI:  /subscriptions/11e6f3b3-21d7-4964-b97f-ccc23a2d46ee/resourcegroups/traefikRG/providers/Microsoft.Compute/disks/traefik
