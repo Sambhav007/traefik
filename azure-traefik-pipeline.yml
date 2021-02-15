@@ -157,37 +157,15 @@ stages:
             value1=`cat 'sqldeployment_build.yaml'`
             echo "$value1"
 
-            echo "******************************"
-            cat 'customer-secret.yaml'
-            value=`cat 'customer-secret.yaml'`
+             echo "******************************"
+            cat 'middleware.yaml'
+            value=`cat 'middleware.yaml'`
             value=${value//##Namespace##/$namespace}
-            echo "$value" > 'customer-secret_build.yaml'
-            value1=`cat 'customer-secret_build.yaml'`
+            echo "$value" > 'middleware_build.yaml'
+            value1=`cat 'middleware_build.yaml'`
             echo "$value1"
 
-            echo "******************************"
-            cat 'topsecret.yaml'
-            value=`cat 'topsecret.yaml'`
-            value=${value//##Namespace##/$namespace}
-            echo "$value" > 'topsecret_build.yaml'
-            value1=`cat 'topsecret_build.yaml'`
-            echo "$value1"
-
-            echo "******************************"
-            cat 'mssql-secret.yaml'
-            value=`cat 'mssql-secret.yaml'`
-            value=${value//##Namespace##/$namespace}
-            echo "$value" > 'mssql-secret_build.yaml'
-            value1=`cat 'mssql-secret_build.yaml'`
-            echo "$value1"
-
-            echo "******************************"
-            cat 'mssql-secret.yaml'
-            value=`cat 'settings/appsettings_customersecret_gen.json'`
-            value=${value//##Namespace##/$namespace}
-            echo "$value" > 'settings/appsettings_customersecret.json'
-            value1=`cat 'settings/appsettings_customersecret.json'`
-            echo "$value1"
+           
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
 
