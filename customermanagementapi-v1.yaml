@@ -22,7 +22,7 @@ spec:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
-        image: demok8.azurecr.io/ps/customermanagement:0.0.1
+        image: traefikcr.azurecr.io/ps/customermanagement:0.0.1
         imagePullPolicy: IfNotPresent
         name: customermanagementapi
         ports:
