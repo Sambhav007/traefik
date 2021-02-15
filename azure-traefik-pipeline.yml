@@ -191,35 +191,8 @@ stages:
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          IFS=',{}:".//'
-            extfile=`cat '/home/vsts/work/1/s/file'`
-            echo "$extfile"
-            read -a strarr <<<"$extfile"
-            keyName=${strarr[1]}
-            echo "$keyName"
-            keyNameVal=${strarr[3]}
-            keyNameVal = ${keyNameVal}
-            #echo "$keyNameVal"  
-            #Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
-            namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
-          echo 'Hello world'
-          #az login -u 'sambhav.s@hcl.com' -p '*********'
-          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-          #az aks get-credentials --resource-group Demok8 --name traefikcluster
-            # List all deployments in all namespaces
-          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-          #az aks get-credentials --resource-group Demok8 --name testingcluster
-          #kubectl get deployments --all-namespaces=true
-          #kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n $namespace --dry-run=client --output=yaml > mssqlsecrets_build.yaml
-          #kubectl create secret generic settingscustomerapi-appsettings --from-file=./settings/appsettings_customersecret.json -n $namespace --dry-run=client --output=yaml > customersecret_build.yaml 
-
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: ''
+        targetPath: 
         artifact: 'traefikdata'
         publishLocation: 'pipeline'
