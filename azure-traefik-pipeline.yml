@@ -68,7 +68,7 @@ stages:
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-14T07:34:18Z&se=2021-02-14T15:34:18Z&spr=https&sv=2019-12-12&sr=b&sig=ijwEtmjo6bYNUC23I4xvGZkdBf4qCjhpndPXa92dfvU%3D" "/home/vsts/work/1/s"
+                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-15T05:41:35Z&se=2021-02-15T13:41:35Z&spr=https&sv=2019-12-12&sr=b&sig=wA8PPwpP1wITv7r0mXyzQl6ykVVAyEtRVp9yFPffViU%3D" "/home/vsts/work/1/s"
                       echo $(Agent.ToolsDirectory)
 
     - task: Bash@3
@@ -208,15 +208,15 @@ stages:
             #Var1=`echo $keyName | sed -e 's/^[[:space:]]*//'`
             namespace=`echo $keyNameVal | sed -e 's/^[[:space:]]*//'`
           echo 'Hello world'
-          az login -u 'sambhav.s@hcl.com' -p 'Shivneha@2015'
+          #az login -u 'sambhav.s@hcl.com' -p '*********'
           #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
           #az aks get-credentials --resource-group Demok8 --name traefikcluster
             # List all deployments in all namespaces
-          az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-          az aks get-credentials --resource-group Demok8 --name testingcluster
-          kubectl get deployments --all-namespaces=true
-          kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n $namespace --dry-run=client --output=yaml > mssqlsecrets_build.yaml
-          kubectl create secret generic settingscustomerapi-appsettings --from-file=./settings/appsettings_customersecret.json -n $namespace --dry-run=client --output=yaml > customersecret_build.yaml 
+          #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
+          #az aks get-credentials --resource-group Demok8 --name testingcluster
+          #kubectl get deployments --all-namespaces=true
+          #kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n $namespace --dry-run=client --output=yaml > mssqlsecrets_build.yaml
+          #kubectl create secret generic settingscustomerapi-appsettings --from-file=./settings/appsettings_customersecret.json -n $namespace --dry-run=client --output=yaml > customersecret_build.yaml 
 
     - task: PublishPipelineArtifact@1
       inputs:
