@@ -5,18 +5,13 @@ entryPoints:
     address: ":443"
   internal:
     address: ":8888"
-
-
  
 api:
   dashboard: true
   insecure: true
   debug: true
 
-apiportal:
-  path: spec.json
  
-  
 providers:
   kubernetesCRD: {}
     
