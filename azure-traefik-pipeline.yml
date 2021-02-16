@@ -25,8 +25,7 @@ stages:
         script: |
           # Write your PowerShell commands here.
           
-          #wget -O teectl_v2.4.2_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.4.2/teectl_v2.4.2_linux_amd64.tar.gz
-          wget -O teectl_v2.4.2_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.4.2/teectl_v2.4.2_linux_armv6.tar.gz
+          wget -O teectl_v2.4.2_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.4.2/teectl_v2.4.2_linux_amd64.tar.gz
           tar -xzvf teectl_v2.4.2_linux_amd64.tar.gz
          
     - task: Bash@3
