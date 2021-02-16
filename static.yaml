@@ -1,3 +1,6 @@
+providers:
+  kubernetesCRD: {}
+
 entryPoints:
   insecure:
     address: ":80"
@@ -10,10 +13,6 @@ api:
   dashboard: true
   insecure: true
   debug: true
-
- 
-providers:
-  kubernetesCRD: {}
     
 mesh: {}
 
