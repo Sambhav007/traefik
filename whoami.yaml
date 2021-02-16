@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: whoami
-          image: traefik/whoami:v1.5.0
+          image: traefik/whoami
 ---
 apiVersion: v1
 kind: Service
@@ -26,8 +26,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 80
-      name: whoami
+    - port: 80 
+      name: whoami     
   selector:
     app: whoami
 ---
@@ -37,11 +37,65 @@ metadata:
   name: whoami
 spec:
   entryPoints:
-    - http
+    - insecure
+    - websecure
   routes:
-    - match: Path(`/whoami`)
-      kind: Rule
+    - match: (Host(`hclerx.southeastasia.cloudapp.azure.com`) &&  (Path(`/whoami`)) )
+      kind: Rule       
+      
       services:
         - name: whoami
           namespace: default
-          port: 80
+          port: 80         
+      tls:
+        certResolver: le   
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: customermanagementapi
+spec:
+  entryPoints:
+    - insecure
+    - websecure
+  routes:
+    - match: (Host(`hclerx.southeastasia.cloudapp.azure.com`) &&  (Path(`/api/customers`)) )
+      kind: Rule       
+      services:
+        - name: customermanagementapi-service.victoryautoworks.svc.cluster.local
+          namespace: victoryautoworks
+          port: 5100  
+      tls:
+        certResolver: le   
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+spec:
+  entryPoints:    
+    - insecure  
+    - websecure     
+  routes:
+    - match: (Host(`hclerx.southeastasia.cloudapp.azure.com`) && ((Path(`/api`)) || (Path(`/dashboard`) )))
+      kind: Rule
+      middlewares:
+        - name: test-jwtauth
+      services:
+        - name: api@internal
+          kind: TraefikService    
+      tls:
+          certResolver: le          
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: test-jwtauth
+spec:
+  plugin:
+    jwtAuth:
+      source: jwtSource
+      forwardAuthorization: true
+      username: userId
+      claims: Equals(`email_id`, `cheshta.31@gmail.com`)
