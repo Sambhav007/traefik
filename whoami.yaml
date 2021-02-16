@@ -24,7 +24,7 @@ metadata:
   labels:
     app: whoami
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 80 
       name: whoami     
@@ -37,18 +37,17 @@ metadata:
   name: whoami
 spec:
   entryPoints:
+    - http
     - insecure
     - websecure
   routes:
-    - match: (Host(`hclerx.southeastasia.cloudapp.azure.com`) &&  (Path(`/whoami`)) )
-      kind: Rule       
-      
+    - match: Path(`/whoami`)
+      kind: Rule
       services:
         - name: whoami
           namespace: default
-          port: 80         
-      tls:
-        certResolver: le   
+          port: 80
+          
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
