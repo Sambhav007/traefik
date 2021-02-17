@@ -48,7 +48,7 @@ stages:
         inlineScript: |
           end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
 
-          fullURL = `az storage blob generate-sas \
+          fullURL = "az storage blob generate-sas \
               --account-name erxstaticweb \
               --container-name pitstop-cicd \
               --name file \
@@ -56,7 +56,7 @@ stages:
               --expiry $end \
               --auth-mode login \
               --as-user \
-              --full-uri`
+              --full-uri"
           echo $(fullURL) 
           echo ${fullURL}
           echo $fullURL  
