@@ -62,6 +62,7 @@ stages:
               --expiry $EXPIRY \
               --permissions acdlrw \
               --output tsv )
+              echo ${SAS_TOKEN}
           $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/file/?${SAS_TOKEN}" "." --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" 
     
     - task: Bash@3
