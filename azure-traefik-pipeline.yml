@@ -61,7 +61,7 @@ stages:
               --as-user \
               --full-uri
           #sas=$(az storage share generate-sas -n pitstop-cicd --account-name erxstaticwebapp --https-only --permissions lr --expiry $end -o tsv)
-          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-15T05:41:35Z&se=2021-02-15T13:41:35Z&spr=https&sv=2019-12-12&sr=b&sig=wA8PPwpP1wITv7r0mXyzQl6ykVVAyEtRVp9yFPffViU%3D" "/home/vsts/work/1/s"
+          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-15T05:41:35Z&se=2021-02-15T13:41:35Z&spr=https&sv=2019-12-12&sr=b&sig=wA8PPwpP1wITv7r0mXyzQl6ykVVAyEtRVp9yFPffViU%3D" "/home/vsts/work/1/s" --recursive
     
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
