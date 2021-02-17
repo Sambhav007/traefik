@@ -79,6 +79,10 @@ stages:
         inlineScript: |
           end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%M:00Z'`
           sas=$(az storage share generate-sas -n pitstop-cicd --account-name erxstaticwebapp --https-only --permissions lr --expiry $end -o tsv)
+          echo $sas
+          echo $(sas)
+          echo ${sas}
+          echo "$sas"
           $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.file.core.windows.net/pitstop-cicd/file/?$sas" "/home/vsts/work/1/s" --recursive --check-md5=FailIfDifferent
     
     - task: Bash@3
