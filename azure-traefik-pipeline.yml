@@ -27,51 +27,42 @@ stages:
           
           wget -O teectl_v2.4.2_linux_amd64.tar.gz https://s3.amazonaws.com/traefikee/binaries/v2.4.2/teectl_v2.4.2_linux_amd64.tar.gz
           tar -xzvf teectl_v2.4.2_linux_amd64.tar.gz
+          
          
+  
     - task: Bash@3
-      displayName: make excutable exe and run teectl version command
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          #echo 'pwd Command Result'
-          #pwd
-          #echo 'ls Command Result'
-          #ls -l
-          
-          #echo 'Chmod command'
-          
-          #chmod 777 teectl
-          echo "chmod command use for exe excuatble"
-          chmod u+x teectl
-          
-          #echo 'teectl version command result'
-          #"/home/vsts/work/1/s/teectl version"
-          #'/home/vsts/work/1/s/teectl version'
-          #./teectl
-
-          #'./teectl version'
-          ./teectl version
-            #az login -u 'sambhav.s@hcl.com' -p "U2hpdm5laGFAMjAxNQo="
-            #az account set --subscription 9f5e2100-3a33-4deb-aa07-ec5f521aebc3
-            #az aks get-credentials --resource-group Demok8 --name traefikcluster
-            # List all deployments in all namespaces
-            #kubectl get deployments --all-namespaces=true
-            #./teectl setup --kubernetes
-   
-    - task: Bash@3
-      displayName: Copy file from blob using Azcopy
+      displayName: Install azcopy
       inputs:
         targetType: 'inline'
         script: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-                      mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
-                      wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
-                      tar -xf azcopy_v10.tar.gz --strip-components=1
-                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-15T05:41:35Z&se=2021-02-15T13:41:35Z&spr=https&sv=2019-12-12&sr=b&sig=wA8PPwpP1wITv7r0mXyzQl6ykVVAyEtRVp9yFPffViU%3D" "/home/vsts/work/1/s"
-                      echo $(Agent.ToolsDirectory)
+          mkdir $(Agent.ToolsDirectory)/azcopy
+          wget -O $(Agent.ToolsDirectory)/azcopy/azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
+          tar -xf $(Agent.ToolsDirectory)/azcopy/azcopy_v10.tar.gz -C $(Agent.ToolsDirectory)/azcopy --strip-components=1
+        
+    - task: AzureCLI@2
+      displayName: Download using azcopy
+      inputs:
+        azureSubscription: 'traefikserviceconnection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          export STORE_NAME="erxstaticweb"
+          export CONTAINER_NAME="pitstop-cicd"
+          export FOLDER="file"
 
+          NOW=`date +"%Y-%m-%dT%H:%M:00Z"` \
+          EXPIRY=`date -d "$NOW + 1 day" +"%Y-%m-%dT%H:%M:00Z"` \
+          && export SAS_TOKEN=$( az storage container generate-sas \
+              --account-name $STORE_NAME \
+              --name $CONTAINER_NAME \
+              --start $NOW \
+              --expiry $EXPIRY \
+              --permissions acdlrw \
+              --output tsv )
+              echo ${SAS_TOKEN}
+          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}?${SAS_TOKEN}" "/home/vsts/work/1/s" 
+    
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
