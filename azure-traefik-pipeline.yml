@@ -157,6 +157,13 @@ stages:
             value1=`cat 'middleware_build.yaml'`
             echo "$value1"
 
+            echo "******************************"
+            cat 'settings/appsettings_customersecret_gen.json'
+            value=`cat 'settings/appsettings_customersecret_gen.json'`
+            value=${value//##Namespace##/$namespace}
+            echo "$value" > 'settings/appsettings_customersecret.json'
+            value1=`cat 'settings/appsettings_customersecret.json'`
+            echo "$value1"
            
             mkdir 'traefikdata'  
             echo 'after creation of traefik'  
