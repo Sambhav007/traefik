@@ -77,7 +77,8 @@ stages:
           --start $NOW \
           --expiry $EXPIRY \
           --permissions acdlrw \
-          --output tsv ) |
+          --output tsv )
+          echo "Saas_Token:" $(SAS_TOKEN)
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
