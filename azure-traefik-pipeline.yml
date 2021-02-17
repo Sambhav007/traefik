@@ -63,7 +63,7 @@ stages:
               --permissions acdlrw \
               --output tsv )
               echo ${SAS_TOKEN}
-          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/file/?${SAS_TOKEN}" "." --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" 
+          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticweb.blob.core.windows.net/pitstop-cicd/file/?${SAS_TOKEN}" "/home/vsts/work/1/s" --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" 
     
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
