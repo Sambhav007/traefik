@@ -65,27 +65,37 @@ stages:
       inputs:
         targetType: 'inline'
         script:
-          export STORE_NAME="erxstaticwebapp"
-          export CONTAINER_NAME="pitstop-cicd"
-          export FOLDER="file"
-
-          NOW=`date +"%Y-%m-%dT%H:%M:00Z"` \
-          EXPIRY=`date -d "$NOW + 1 day" +"%Y-%m-%dT%H:%M:00Z"` \
-          && export SAS_TOKEN=$( az storage container generate-sas \
-          --account-name $STORE_NAME \
-          --name $CONTAINER_NAME \
-          --start $NOW \
-          --expiry $EXPIRY \
-          --permissions acdlrw \
-          --output tsv )
-          echo "Saas_Token:" $(SAS_TOKEN)
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
                       mkdir $(Agent.ToolsDirectory)/azcopy && cd "$_"
                       wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
                       tar -xf azcopy_v10.tar.gz --strip-components=1
-                      $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}/?${SAS_TOKEN}" "/home/vsts/work/1/s"
-                      echo $(Agent.ToolsDirectory)
+                      #$(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}/?${SAS_TOKEN}" "/home/vsts/work/1/s"
+                      #echo $(Agent.ToolsDirectory)
+    
+    - task: AzureCLI@2
+      displayName: Download using azcopy
+      inputs:
+       azureSubscription: my-vmssagents-service-connection
+       scriptType: bash
+       scriptLocation: inlineScript
+       inlineScript: |
+        export STORE_NAME="erxstaticwebapp"
+        export CONTAINER_NAME="pitstop-cicd"
+        export FOLDER="file"
 
+        NOW=`date +"%Y-%m-%dT%H:%M:00Z"` \
+        EXPIRY=`date -d "$NOW + 1 day" +"%Y-%m-%dT%H:%M:00Z"` \
+        && export SAS_TOKEN=$( az storage container generate-sas \
+            --account-name $STORE_NAME \
+            --name $CONTAINER_NAME \
+            --start $NOW \
+            --expiry $EXPIRY \
+            --permissions acdlrw \
+            --output tsv )
+
+        $(Agent.ToolsDirectory)/azcopy/azcopy copy \
+            "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}/?${SAS_TOKEN}" \
+            "." --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" # <-- my specific pattern
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
