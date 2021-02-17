@@ -10,7 +10,7 @@ spec:
     - match: (Host(`traefikerx.southeastasia.cloudapp.azure.com`) && (Path(`/api/customers`))&& (Headers(`Company`,`##Namespace##`))&& ((Method(`GET`) ) || (Method(`POST`) )))
       kind: Rule   
       middlewares:
-        - name: pitstop-jwtauth-natgeo
+        - name: pitstop-jwtauth-##Namespace##
       services:
         - name: customermanagementapi-service
           namespace: ##Namespace##

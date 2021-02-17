@@ -24,7 +24,7 @@ metadata:
   labels:
     app: whoami
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 80 
       name: whoami     
