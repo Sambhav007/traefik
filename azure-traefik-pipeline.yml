@@ -46,11 +46,10 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%M:00Z'`
-          #end=`date -u -d "30 minutes" '+%Y-%m-%dT%H:%MZ'`
+          end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
 
           fullURL = `az storage blob generate-sas \
-              --account-name erxstaticwebapp \
+              --account-name erxstaticweb \
               --container-name pitstop-cicd \
               --name file \
               --permissions acdrw \
