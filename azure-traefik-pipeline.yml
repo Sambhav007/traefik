@@ -40,7 +40,7 @@ stages:
           tar -xf $(Agent.ToolsDirectory)/azcopy/azcopy_v10.tar.gz -C $(Agent.ToolsDirectory)/azcopy --strip-components=1
           end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
 
-          fullURL = `az storage blob generate-sas \
+          az storage blob generate-sas \
               --account-name erxstaticweb \
               --container-name pitstop-cicd \
               --name file \
@@ -48,11 +48,11 @@ stages:
               --expiry $end \
               --auth-mode login \
               --as-user \
-              --full-uri`
-          echo $(fullURL) 
-          echo ${fullURL}
-          echo $fullURL  
-          echo "$(fullURL)" 
+              --full-uri
+          #echo $(fullURL) 
+          #echo ${fullURL}
+          #echo $fullURL  
+          #echo "$(fullURL)" 
         
     - task: AzureCLI@2
       displayName: Download using azcopy
@@ -63,7 +63,7 @@ stages:
         inlineScript: |
           end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
 
-          fullURL = "az storage blob generate-sas \
+          az storage blob generate-sas \
               --account-name erxstaticweb \
               --container-name pitstop-cicd \
               --name file \
@@ -71,13 +71,9 @@ stages:
               --expiry $end \
               --auth-mode login \
               --as-user \
-              --full-uri"
-          echo $(fullURL) 
-          echo ${fullURL}
-          echo $fullURL  
-          echo "$(fullURL)" 
+              --full-uri
           #sas=$(az storage share generate-sas -n pitstop-cicd --account-name erxstaticwebapp --https-only --permissions lr --expiry $end -o tsv)
-          $(Agent.ToolsDirectory)/azcopy/azcopy copy "az storage blob generate-sas --account-name erxstaticweb --container-name pitstop-cicd --name file --permissions acdrw --expiry $end --auth-mode login --as-user --full-uri" "/home/vsts/work/1/s" --recursive --check-md5=FailIfDifferent
+          #$(Agent.ToolsDirectory)/azcopy/azcopy copy "az storage blob generate-sas --account-name erxstaticweb --container-name pitstop-cicd --name file --permissions acdrw --expiry $end --auth-mode login --as-user --full-uri" "/home/vsts/work/1/s" --recursive --check-md5=FailIfDifferent
     
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
