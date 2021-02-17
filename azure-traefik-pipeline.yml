@@ -48,8 +48,7 @@ stages:
         azureSubscription: 'traefikserviceconnection'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 
-          
+        inlineScript: |
           end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
 
           az storage blob generate-sas \
