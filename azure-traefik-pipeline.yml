@@ -40,19 +40,7 @@ stages:
           tar -xf $(Agent.ToolsDirectory)/azcopy/azcopy_v10.tar.gz -C $(Agent.ToolsDirectory)/azcopy --strip-components=1
           end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
 
-          az storage blob generate-sas \
-              --account-name erxstaticweb \
-              --container-name pitstop-cicd \
-              --name file \
-              --permissions acdrw \
-              --expiry $end \
-              --auth-mode login \
-              --as-user \
-              --full-uri
-          #echo $(fullURL) 
-          #echo ${fullURL}
-          #echo $fullURL  
-          #echo "$(fullURL)" 
+          
         
     - task: AzureCLI@2
       displayName: Download using azcopy
