@@ -50,10 +50,17 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           
-          end1=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%M:00Z'`
-          az storage share generate-sas -n pitstop-cicd --account-name erxstaticweb --https-only --permissions lr --expiry $end1
-         
+          
           end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
+          
+          
+          az storage container generate-sas \
+          --account-name erxstaticweb \
+          --name pitstop-cicd \
+          --permissions acdlrw \
+          --expiry $end \
+          --auth-mode login \
+          --as-user
 
           az storage blob generate-sas \
               --account-name erxstaticweb \
