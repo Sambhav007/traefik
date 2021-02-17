@@ -39,18 +39,7 @@ stages:
           mkdir $(Agent.ToolsDirectory)/azcopy
           wget -O $(Agent.ToolsDirectory)/azcopy/azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux
           tar -xf $(Agent.ToolsDirectory)/azcopy/azcopy_v10.tar.gz -C $(Agent.ToolsDirectory)/azcopy --strip-components=1
-          #end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
-           NOW=`date +"%Y-%m-%dT%H:%M:00Z"` \
-          EXPIRY=`date -d "$NOW + 1 day" +"%Y-%m-%dT%H:%M:00Z"` \
-          && export SAS_TOKEN=$( az storage container generate-sas \
-              --account-name $STORE_NAME \
-              --name $CONTAINER_NAME \
-              --start $NOW \
-              --expiry $EXPIRY \
-              --permissions acdlrw \
-              --output tsv )
-              echo ${SAS_TOKEN}
-          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticweb.blob.core.windows.net/pitstop-cicd/file?${SAS_TOKEN}" "/home/vsts/work/1/s" --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" 
+         
 
           
         
