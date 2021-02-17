@@ -93,9 +93,7 @@ stages:
               --permissions acdlrw \
               --output tsv )
           
-          $(Agent.ToolsDirectory)/azcopy/azcopy copy \
-              "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}/?${SAS_TOKEN}" \
-              "." --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" # <-- my specific pattern
+          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}/?${SAS_TOKEN}" "." --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" # <-- my specific pattern
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
       inputs:
