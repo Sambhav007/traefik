@@ -49,30 +49,20 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          
-          
-          end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
-          
-          
-          az storage share generate-sas \
-          --account-name erxstaticweb \
-          --name pitstop-cicd \
-          --permissions acdlrw \
-          --expiry $end \
-          --auth-mode login \
-          --as-user
+          export STORE_NAME="erxstaticweb"
+          export CONTAINER_NAME="pitstop-cicd"
+          export FOLDER="file"
 
-          az storage blob generate-sas \
-              --account-name erxstaticweb \
-              --container-name pitstop-cicd \
-              --name file \
-              --permissions acdrw \
-              --expiry $end \
-              --auth-mode login \
-              --as-user \
-              --full-uri
-          #sas=$(az storage share generate-sas -n pitstop-cicd --account-name erxstaticwebapp --https-only --permissions lr --expiry $end -o tsv)
-          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://erxstaticwebapp.blob.core.windows.net/pitstop-cicd/file?sp=r&st=2021-02-15T05:41:35Z&se=2021-02-15T13:41:35Z&spr=https&sv=2019-12-12&sr=b&sig=wA8PPwpP1wITv7r0mXyzQl6ykVVAyEtRVp9yFPffViU%3D" "/home/vsts/work/1/s" --recursive
+          NOW=`date +"%Y-%m-%dT%H:%M:00Z"` \
+          EXPIRY=`date -d "$NOW + 1 day" +"%Y-%m-%dT%H:%M:00Z"` \
+          && export SAS_TOKEN=$( az storage container generate-sas \
+              --account-name $STORE_NAME \
+              --name $CONTAINER_NAME \
+              --start $NOW \
+              --expiry $EXPIRY \
+              --permissions acdlrw \
+              --output tsv )
+          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}/?${SAS_TOKEN}" "." --recursive --include-pattern "*c_*b.nc;left.nc;right.nc" 
     
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
