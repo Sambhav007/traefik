@@ -43,14 +43,14 @@ stages:
     - task: AzureCLI@2
       displayName: Download using azcopy
       inputs:
-        azureSubscription: 'traefikserviceconnection'
+        azureSubscription: 'traefikterraform'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
           export STORE_NAME="erxstaticweb"
           export CONTAINER_NAME="pitstop-cicd"
           export FOLDER="file"
-
+          
           NOW=`date +"%Y-%m-%dT%H:%M:00Z"` \
           EXPIRY=`date -d "$NOW + 1 day" +"%Y-%m-%dT%H:%M:00Z"` \
           && export SAS_TOKEN=$( az storage container generate-sas \
@@ -61,7 +61,7 @@ stages:
               --permissions acdlrw \
               --output tsv )
               echo ${SAS_TOKEN}
-          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}?${SAS_TOKEN}" "/home/vsts/work/1/s" 
+          $(Agent.ToolsDirectory)/azcopy/azcopy copy "https://${STORE_NAME}.blob.core.windows.net/${CONTAINER_NAME}/${FOLDER}?${SAS_TOKEN}" "/home/vsts/work/1/s"
     
     - task: Bash@3
       displayName: Extract the namespace from blob file and replace in place of the placeholder in yaml files 
